@@ -121,7 +121,9 @@ module LOL
     'Cryophoenix' => 'Anivia',
     'FallenAngel' => 'Morgana',
     'Permission' => 'Veigar',
-    'XenZhao' => 'Xin Zhao'
+    'XenZhao' => 'Xin Zhao',
+    'MasterYi' => 'Master Yi',
+    'Lich' => 'Karthus'
   }
   
   MAPS = {

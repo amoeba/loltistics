@@ -116,8 +116,8 @@ module LOL
   
         match = @matches[match_key]
 
-        [[match[:teams][:winning], eog['body']['teamPlayerParticipantStats']['list']['source']],
-         [match[:teams][:losing], eog['body']['otherTeamPlayerParticipantStats']['list']['source']]].each do |team, players|
+        [[match[:teams][:winning], eog['body']['otherTeamPlayerParticipantStats']['list']['source']],
+         [match[:teams][:losing], eog['body']['teamPlayerParticipantStats']['list']['source']]].each do |team, players|
             players.each do |player|
               new_player = {
                 :locale => @locale,

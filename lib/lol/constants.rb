@@ -130,7 +130,7 @@ module LOL
     'Voidwalker' => 'Kassadin',
     'CardMaster' => 'Twisted Fate',
     'Wolfman' => 'Warwick',
-    'SteamGolen' => 'Blitzcrank',
+    'SteamGolem' => 'Blitzcrank',
     'Armsmaster' => 'Jax'
   }
   

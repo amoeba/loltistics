@@ -131,7 +131,8 @@ module LOL
     'CardMaster' => 'Twisted Fate',
     'Wolfman' => 'Warwick',
     'SteamGolem' => 'Blitzcrank',
-    'Armsmaster' => 'Jax'
+    'Armsmaster' => 'Jax',
+    'ChemicalMan' => 'Singed'
   }
   
   MAPS = {

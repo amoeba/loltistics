@@ -1,5 +1,11 @@
-%h2 Upload Result
-
-= "Matches: #{@result[:matches].keys}"
-%br
-= "Players: #{@result[:players].keys}"
+- if @result[:matches].length == 0
+  No matches found
+- else
+  - @result[:matches].keys.each do |match|
+    %a{:href => "/matches/#{match}"}= match
+  
+- if @result[:players].length == 0
+  No players found
+- else
+  - @result[:players].each do |name, player|
+    %a{:href => "/matches/#{player[:locale] + player[:summoner_name]}"}= "#{player[:locale]}-#{player[:summoner_name]}"

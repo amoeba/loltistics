@@ -1,6 +1,11 @@
 %h2 Upload
 
-%form{:method => :post, :enctype => 'multipart/form-data'}
+%form#upload-form{:method => :post, :enctype => 'multipart/form-data'}
   %label{:for => 'file'} Select a logfile:
   %input{:type => 'file', :name => 'file'}
   %input{:type => 'submit', :value => 'Upload'}
+
+#last_output ...
+%script{:type => 'text/javascript', :src => 'http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js'}
+%script{:type => 'text/javascript', :src => '/js/jquery.form.js'}
+%script{:type => 'text/javascript', :src => '/js/upload.js'}

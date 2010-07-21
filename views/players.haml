@@ -3,4 +3,4 @@
 %ul
   - @players.each do |player|
     %li
-      %a{:href => "/player/#{player['summoner_name']}"}= player['summoner_name']
+      %a{:href => "/players/#{player['summoner_name']}"}= player['summoner_name']

@@ -1,5 +1,5 @@
 %h2
-  %a{:href => "/players/#{@player['summoner_name']}"}= @player['summoner_name']
+  %a{:href => "/players/#{@player['locale']}-#{@player['summoner_name']}"}= @player['summoner_name']
 
 %img{:src => "/images/summoner_icons/#{@player['profile_icon_id']}.jpg", :alt => "Summoner Icon"}
 

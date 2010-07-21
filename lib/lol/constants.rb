@@ -125,7 +125,11 @@ module LOL
     'MasterYi' => 'Master Yi',
     'Lich' => 'Karthus',
     'FiddleSticks' => 'Fiddlesticks',
-    'KogMaw' => 'Kog\'Maw'
+    'KogMaw' => 'Kog\'Maw',
+    'SteamGolen' => 'Blitzcrank',
+    'Voidwalker' => 'Kassadin',
+    'CardMaster' => 'Twisted Fate',
+    'Wolfman' => 'Warwick'
   }
   
   MAPS = {

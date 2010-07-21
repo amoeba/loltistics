@@ -1,2 +1,4 @@
 sinatra
 mongo
+haml
+sass

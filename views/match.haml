@@ -2,12 +2,12 @@
   %a{:href => "/matches/#{@match['id']}"}= @match['id']
 
 %ul
-  %li= @match['map_id']
-  %li= @match['created']
-  %li= @match['queue_type']
-  %li= @match['game_type']
-  %li= @match['ranked']
-  %li= @match['game_length']
+  %li= "#{@match['map_id']}"
+  %li= "#{@match['created']}"
+  %li= "#{@match['queue_type']}"
+  %li= "#{@match['game_type']}"
+  %li= "#{@match['ranked']}"
+  %li= "#{@match['game_length']}"
 
 %h2 Winning Team
 %table

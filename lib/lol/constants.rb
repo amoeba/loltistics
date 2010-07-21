@@ -106,6 +106,7 @@ module LOL
     '3086' => 'Zeal',
     '3089' => 'Zhonya\'s Ring'
   }
+  
   CHAMPIONS = {
     'SadMummy' => 'Amumu',
     'Armordillo' => 'Rammus',
@@ -122,6 +123,7 @@ module LOL
     'Permission' => 'Veigar',
     'XenZhao' => 'Xin Zhao'
   }
+  
   MAPS = {
     '1' => 'Summoner\'s Rift',
     '2' => 'Summoner\'s Rift (Winter)',

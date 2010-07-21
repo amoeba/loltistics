@@ -124,7 +124,8 @@ module LOL
     'XenZhao' => 'Xin Zhao',
     'MasterYi' => 'Master Yi',
     'Lich' => 'Karthus',
-    'FiddleSticks' => 'Fiddlesticks'
+    'FiddleSticks' => 'Fiddlesticks',
+    'KogMaw' => 'Kog\'Maw'
   }
   
   MAPS = {

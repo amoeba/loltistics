@@ -4,4 +4,14 @@
     %title LoLtistics
     %link{:rel => 'stylesheet', :href => '/stylesheets/loltistics.css', :type => 'text/css'}
   %body
+    #header
+      %h1 LoLtistics
+    #navigation
+      %ul
+        %li
+          %a{:href => '/matches'} Matches
+        %li
+          %a{:href => '/players'} Players
+        %li
+          %a{:href => '/upload'} Upload
     = yield

@@ -7,7 +7,7 @@
   %li= "Queue Type: #{@match['queue_type']}"
   %li= "Game Type: #{@match['game_type']}"
   %li= "Ranked?: #{@match['ranked']}"
-  %li= "Game Length (minutes): #{@match['game_length'] / 60}"
+  %li= "Game Length: #{@match['game_length'].to_i / 60} minutes"
 
 %h2 Winning Team
 %table

@@ -8,4 +8,4 @@
   No players found
 - else
   - @result[:players].each do |name, player|
-    %a{:href => "/matches/#{player[:locale] + player[:summoner_name]}"}= "#{player[:locale]}-#{player[:summoner_name]}"
+    %a{:href => "/matches/#{player[:locale]}-#{player[:summoner_name]}"}= "#{player[:locale]}-#{player[:summoner_name]}"

@@ -123,7 +123,8 @@ module LOL
     'Permission' => 'Veigar',
     'XenZhao' => 'Xin Zhao',
     'MasterYi' => 'Master Yi',
-    'Lich' => 'Karthus'
+    'Lich' => 'Karthus',
+    'FiddleSticks' => 'Fiddlesticks'
   }
   
   MAPS = {

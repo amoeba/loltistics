@@ -1,0 +1,16 @@
+%h2
+  %a{:href => "/players/#{@player['summoner_name']}"}= @player['summoner_name']
+
+%img{:src => "/images/summoner_icons/#{@player['profile_icon_id']}.jpg", :alt => "Summoner Icon"}
+
+%ul
+  %li= "Level: #{@player['level']}"
+  %li= "Locale: #{@player['locale']}"
+  %li= "ELO: #{@player['elo']}"
+  %li= "Wins: #{@player['wins']}"
+  %li= "Losses: #{@player['losses']}"
+  %li= "Leaves: #{@player['leaves']}"
+  
+%h3 Matches
+- @player['matches'].each do |match|
+  %a{:href => "/matches/#{match}"}= match

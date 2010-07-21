@@ -1,0 +1,3 @@
+- team.each do |player|
+  %tr
+    = haml(:_team_player, :layout => false, :locals => { :player => player })

@@ -1,0 +1,6 @@
+%h2 Upload
+
+%form{:method => :post, :enctype => 'multipart/form-data'}
+  %label{:for => 'file'} Select a logfile:
+  %input{:type => 'file', :name => 'file'}
+  %input{:type => 'submit', :value => 'Upload'}

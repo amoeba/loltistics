@@ -1,0 +1,34 @@
+%h1
+  %a{:href => "/matches/#{@match['id']}"}= @match['id']
+
+%ul
+  %li= @match['map_id']
+  %li= @match['created']
+  %li= @match['queue_type']
+  %li= @match['game_type']
+  %li= @match['ranked']
+  %li= @match['game_length']
+
+%h2 Winning Team
+%table
+  %thead
+    %tr
+      %th Summoner
+      %th Level
+      %th ELO
+      %th Kills/Deaths/Assists
+      %th Items
+  %tbody
+    = haml(:_team, :layout => false, :locals => { :team => @match['teams']['winning'] })
+
+%h2 Losing Team
+%table
+  %thead
+    %tr
+      %th Summoner
+      %th Level
+      %th ELO
+      %th Kills/Deaths/Assists
+      %th Items
+  %tbody
+    = haml(:_team, :layout => false, :locals => { :team => @match['teams']['losing'] })

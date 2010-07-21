@@ -1,0 +1,7 @@
+%h2 All Matches
+
+%ul
+  - @matches.each do |match|
+    %li
+      %a{:href => "/matches/#{match['id']}"}= match['id']
+  

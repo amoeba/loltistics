@@ -129,7 +129,9 @@ module LOL
     'SteamGolen' => 'Blitzcrank',
     'Voidwalker' => 'Kassadin',
     'CardMaster' => 'Twisted Fate',
-    'Wolfman' => 'Warwick'
+    'Wolfman' => 'Warwick',
+    'SteamGolen' => 'Blitzcrank',
+    'Armsmaster' => 'Jax'
   }
   
   MAPS = {

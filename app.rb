@@ -70,8 +70,8 @@ get '/players' do
 end
 
 get %r{/players/([EUS]{2})-(.+)} do |locale, name|
-  @player = players.find_one({'locale' => locale, 'summoner_name' => escape(name)})
-  raise PlayerNotFound if @players.nil?
+  @player = players.find_one({'locale' => locale, 'summoner_name' => name})
+  raise PlayerNotFound if @player.nil?
 
   haml :player
 end

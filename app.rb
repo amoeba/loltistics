@@ -6,16 +6,15 @@ require 'sass'
 
 require './lib/lol/lol'
 
-# MongoHQ
+# Database
 if ENV['MONGOHQ_URL']
-  # We're on Heroku and should use MongoHQ
   uri = URI.parse(ENV['MONGOHQ_URL'])
   connection = Mongo::Connection.from_uri(ENV['MONGOHQ_URL'])
   db = connection.db(uri.path.gsub(/^\//, ''))
-  
+else
   #db = Mongo::Connection.new('flame.mongohq.com', 27078).db('loltistics')
   #auth = db.authenticate('amoeba', 'Ne2uMh')
-else
+  
   connection = Mongo::Connection.new('127.0.0.1', 27017)
   db = connection.db('loltistics')
 end
@@ -25,8 +24,23 @@ if db
   players = db.collection('players')
 end
 
+# Configuration
 set :haml, {:format => :html5 }
 
+# Error Pages
+
+class PlayerNotFound < StandardError; end
+class MatchNotFound < StandardError; end
+
+error PlayerNotFound do
+  haml :'404', :locals => { :message => 'Player not found' }
+end
+
+error MatchNotFound do
+  haml :'404', :locals => { :message => 'Match not found' }
+end
+
+# Routes
 get '/stylesheets/loltistics.css' do
   content_type 'text/css', :charset => 'utf-8'
   sass :loltistics
@@ -44,6 +58,7 @@ end
 
 get '/matches/:id' do |id|
   @match = matches.find_one('id' => id)
+  raise MatchNotFound if @match.nil?
   
   haml :match
 end
@@ -54,9 +69,10 @@ get '/players' do
   haml :players
 end
 
-get '/players/:name' do |name|
-  @player = players.find_one('summoner_name' => name)
-  
+get %r{/players/([EUS]{2})-(.+)} do |locale, name|
+  @player = players.find_one({'locale' => locale, 'summoner_name' => escape(name)})
+  raise PlayerNotFound if @players.nil?
+
   haml :player
 end
 
@@ -70,7 +86,7 @@ post '/upload' do
   @result[:matches].each do |k, v|
     matches.insert(v) unless matches.find_one({'id' => k})
   end
-
+  
   @result[:players].each do |k, v|
     existing_player = players.find_one('summoner_name' => v[:summoner_name])
   
@@ -80,6 +96,6 @@ post '/upload' do
       players.insert(v)
     end
   end
-
-  haml :result
+  
+  haml :result, :layout => false
 end

@@ -37,7 +37,7 @@ get '/' do
 end
 
 get '/matches' do
-  @matches = matches.find()
+  @matches = matches.find().sort([['id', 1]])
   
   haml :matches
 end
@@ -46,6 +46,12 @@ get '/matches/:id' do |id|
   @match = matches.find_one('id' => id)
   
   haml :match
+end
+
+get '/players' do
+  @players = players.find().sort([['summoner_name',1]])
+  
+  haml :players
 end
 
 get '/players/:name' do |name|

@@ -1,5 +1,5 @@
 %td
-  %a{:href => "/players/#{player['summoner_name']}"}= player['summoner_name']
+  %a{:href => "/players/#{player['locale']}-#{player['summoner_name']}"}= player['summoner_name']
   %br
   %img{:src => "/images/champions/#{LOL.champion_name(player['skin_name'])}.png", :alt => LOL.champion_name(player['skin_name'])}
 %td= player['level']

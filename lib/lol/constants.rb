@@ -132,7 +132,9 @@ module LOL
     'Wolfman' => 'Warwick',
     'SteamGolem' => 'Blitzcrank',
     'Armsmaster' => 'Jax',
-    'ChemicalMan' => 'Singed'
+    'ChemicalMan' => 'Singed',
+    'Minotaur' => 'Alistair',
+    'Pirate' => 'Gangplank'
   }
   
   MAPS = {

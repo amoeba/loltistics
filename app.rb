@@ -13,9 +13,13 @@ require './lib/lol/lol'
 
 # Database
 if ENV['MONGOHQ_URL']
-  uri = URI.parse(ENV['MONGOHQ_URL'])
-  connection = Mongo::Connection.from_uri(ENV['MONGOHQ_URL'])
-  db = connection.db(uri.path.gsub(/^\//, ''))
+  #uri = URI.parse(ENV['MONGOHQ_URL'])
+  #connection = Mongo::Connection.from_uri(ENV['MONGOHQ_URL'])
+  #db = connection.db(uri.path.gsub(/^\//, ''))
+  
+  connection = Mongo::Connection.new(ENV['MONGOHQ_URL'], ENV['MONGOHQ_PORT'])
+  db = connection.db(ENV['MONGOHQ_DB'])
+  auth = db.authenticate(ENV['MONGOHQ_USER'], ENV['MONGOHQ_PASSWORD'])
 else
   #db = Mongo::Connection.new('flame.mongohq.com', 27078).db('loltistics')
   #auth = db.authenticate('amoeba', 'Ne2uMh')

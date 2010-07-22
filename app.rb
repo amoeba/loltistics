@@ -1,8 +1,13 @@
 require 'sinatra'
+
+require "sinatra/reloader" if development?
+require 'pp' if development?
+
 require 'uri'
 require 'mongo'
 require 'haml'
 require 'sass'
+require 'json'
 
 require './lib/lol/lol'
 
@@ -81,7 +86,8 @@ get '/upload' do
 end
 
 post '/upload' do
-  @result = LOL.parse_file(params[:file][:tempfile].read)
+  file = params[:file] ? params[:file][:tempfile] : env['rack.input']
+  @result = LOL.parse_file(file.read)
   
   @result[:matches].each do |k, v|
     matches.insert(v) unless matches.find_one({'id' => k})
@@ -97,5 +103,11 @@ post '/upload' do
     end
   end
   
-  haml :result, :layout => false
+  content_type :json
+  
+  {
+    :success => true,
+    :matches => @result[:matches].keys,
+    :players => @result[:players].values.collect { |p| "#{p[:locale]}-#{p[:summoner_name]}" }
+  }.to_json
 end

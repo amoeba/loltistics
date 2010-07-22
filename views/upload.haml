@@ -1,12 +1,18 @@
-%h2 Upload
+%h2 Upload Log Files
 
-%form#upload-form{:method => :post, :enctype => 'multipart/form-data'}
-  %label{:for => 'file'} Select a logfile:
-  %input{:type => 'file', :name => 'file'}
-  %input{:type => 'submit', :value => 'Upload'}
+%p Click the Upload a file button below to upload one or more log files
+%p By default, log files are located in C:\Riot Games\League of Legends\air\logs
+#file-uploader
+  %noscript
+    %p You are seeing this message because you have Javascript disabled.
+    %form#upload-form{:method => :post, :enctype => 'multipart/form-data'}
+      %label{:for => 'file'} Select a logfile:
+      %input{:type => 'file', :name => 'file'}
+      %input{:type => 'submit', :value => 'Upload'}
 
+%h3 Results
 %ul#output
 
 %script{:type => 'text/javascript', :src => 'http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js'}
-%script{:type => 'text/javascript', :src => '/js/jquery.form.js'}
+%script{:type => 'text/javascript', :src => '/js/file-uploader.js'}
 %script{:type => 'text/javascript', :src => '/js/upload.js'}

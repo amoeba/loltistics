@@ -102,7 +102,7 @@ module LOL
         eog = parse(message)
         match_key = @locale + eog['body']['gameId']
   
-        @matches[match_key] ||= {}
+        @matches[match_key] = {} unless @matches[match_key]
         @matches[match_key].merge!({
           :queue_type => eog['body']['queueType'],
           :game_length => eog['body']['gameLength'],

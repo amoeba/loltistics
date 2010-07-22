@@ -18,7 +18,7 @@ $(document).ready(function() {
         html += 'No players found.';
       } else {
         $.each(responseJSON.players, function(i, p) {
-          html += '<a href="/matches/' + p + '">' + p + '</a> ';
+          html += '<a href="/players/' + p + '">' + p + '</a> ';
         });
       }
       

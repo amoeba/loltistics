@@ -31,10 +31,6 @@ if db
   logs = db.collection('logs')
 end
 
-matches.remove()
-players.remove()
-logs.remove()
-
 # Configuration
 set :haml, {:format => :html5 }
 

@@ -16,10 +16,12 @@
       %th Summoner
       %th Level
       %th ELO
-      %th Kills/Deaths/Assists
+      %th Kills
+      %th Deaths
+      %th Assisits
       %th Items
   %tbody
-    = haml(:_team, :layout => false, :locals => { :team => @match['teams']['winning'] })
+    = haml(:_team, :layout => false, :locals => { :team => @match['players'].select { |p| p['team_id'] == '200' } })
 
 %h2 Losing Team
 %table
@@ -28,7 +30,12 @@
       %th Summoner
       %th Level
       %th ELO
-      %th Kills/Deaths/Assists
+      %th Kills
+      %th Deaths
+      %th Assisits
       %th Items
   %tbody
-    = haml(:_team, :layout => false, :locals => { :team => @match['teams']['losing'] })
+    = haml(:_team, :layout => false, :locals => { :team => @match['players'].select { |p| p['team_id'] == '100' } })
+
+%script{:type => 'text/javascript', :src => '/js/jquery.tools.min.js'}
+%script{:type => 'text/javascript', :src => '/js/match.js'}

@@ -1,0 +1,18 @@
+%h2 Parser Logs
+
+%table
+  %thead
+    %tr
+      %th Filename
+      %th Parsed At
+      %th Parse Time
+      %th Matches Found
+      %th Players Found
+  %tbody
+  - @logs.each do |log|
+    %tr
+      %td= log['filename']
+      %td= log['parsed_at']
+      %td= log['parse_time']
+      %td= log['matches_found'].collect { |m| "<a href=\"/matches/#{m}\">#{m}</a>" }.join(', ')
+      %td= log['players_found'].collect { |p| "<a href=\"/players/#{p}\">#{p}</a>" }.join(', ')

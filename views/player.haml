@@ -14,7 +14,8 @@
     = "Last Match: #{@player['last_game_timestamp']}"
     %a{:href => "/matches/#{@player['last_match_key']}"}= @player['last_match_key']
   
-%h3 Matches
-%ul
-  - @player['matches'].each do |match|
-    %li= "#{match['id']}"
+- if @player['matches']
+  %h3 Matches
+  %ul
+    - @player['matches'].each do |match|
+      %li= "#{match['id']}"

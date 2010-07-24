@@ -87,7 +87,7 @@ module LOL
     @reduced_file = []
     
     @messages = content.split /^\d+\/\d+\/\d+ \d+:\d+:\d+\.\d+ /
-    @locale, @matches, @players = nil, {}, []
+    @locale, @matches, @players = nil, {}, {}
     match, match_key = nil, ''
     items, finding_items = [], false
 
@@ -149,8 +149,15 @@ module LOL
             :last_game_timestamp => eog['timestamp'],
             :last_match_key => match_key
           }
-  
-          @players.push(new_player.clone)
+          existing_player = @players[new_player[:summoner_name]]
+          
+          if existing_player
+            if existing_player[:last_game_timestamp].to_i < new_player[:last_game_timestamp].to_i
+              @players[new_player[:summoner_name]] = new_player.clone
+            end
+          else
+            @players[new_player[:summoner_name]] = new_player.clone
+          end
     
           # Match-specific attributes
           new_player.merge!({

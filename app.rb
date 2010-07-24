@@ -9,26 +9,25 @@ require './lib/lol/lol'
 
 # Database
 if ENV['MONGOHQ_URL']
-  #uri = URI.parse(ENV['MONGOHQ_URL'])
-  #connection = Mongo::Connection.from_uri(ENV['MONGOHQ_URL'])
-  #db = connection.db(uri.path.gsub(/^\//, ''))
-  
   connection = Mongo::Connection.new(ENV['MONGOHQ_URL'], ENV['MONGOHQ_PORT'])
   db = connection.db(ENV['MONGOHQ_DB'])
   auth = db.authenticate(ENV['MONGOHQ_USER'], ENV['MONGOHQ_PASSWORD'])
 else
   connection = Mongo::Connection.new('flame.mongohq.com', 27074)
   db = connection.db('loltistics-test')
-  auth = db.authenticate('amoeba', 'Ne2uMh')
-  
-  #connection = Mongo::Connection.new('127.0.0.1', 27017)
-  #db = connection.db('loltistics')
+  auth = db.authenticate('amoeba-test', 'amoeba-test')
 end
 
 if db
   matches = db.collection('matches')
   players = db.collection('players')
   logs = db.collection('logs')
+end
+
+if development?
+  matches.remove()
+  players.remove()
+  logs.remove()
 end
 
 # Configuration
@@ -105,8 +104,9 @@ post '/upload' do
     matches.insert(match) unless matches.find_one({'id' => match_key})
   end
   
-  @result[:players].each do |player|
-    existing_player = players.find_one({:summoner_name => player[:summoner_name]})
+  @result[:players].each do |name, player|
+    puts "Processing #{name}"
+    existing_player = players.find_one({:summoner_name => name})
   
     if existing_player
       if existing_player['last_game_timestamp'].to_i < player[:last_game_timestamp].to_i
@@ -116,22 +116,22 @@ post '/upload' do
       players.insert(player)
     end
     
-    # Add matches to the Player
-    player_match = matches.find_one({'id' => player[:last_match_key]})
-    
-    if player_match
-      puts "Finding and modifying"
-      players.find_and_modify({
-        :query => { :summoner_name => player[:summoner_name] }, 
-        :update => { 
-          '$push' => { :matches => player_match}
-        }
-      })
-    end
+    ## Add matches to the Player
+    #player_match = matches.find_one({'id' => player[:last_match_key]})
+    #
+    #if player_match
+    #  puts "Finding and modifying"
+    #  players.find_and_modify({
+    #    :query => { :summoner_name => player[:summoner_name] }, 
+    #    :update => { 
+    #      '$push' => { :matches => player_match}
+    #    }
+    #  })
+    #end
   end
   
   matches_found = @result[:matches].keys
-  players_found = @result[:players].collect { |p| "#{p[:locale]}-#{p[:summoner_name]}" }
+  players_found = @result[:players].collect { |name, player| "#{player[:locale]}-#{name}" }
   
   logs.insert({
     :filename => filename,

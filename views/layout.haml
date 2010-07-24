@@ -3,15 +3,20 @@
   %head
     %title LoLtistics
     %link{:rel => 'stylesheet', :href => '/stylesheets/loltistics.css', :type => 'text/css'}
+    %script{:type => 'text/javascript', :src => 'http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js'}
   %body
     #header
-      %h1 LoLtistics
-    #navigation
-      %ul
-        %li
-          %a{:href => '/matches'} Matches
-        %li
-          %a{:href => '/players'} Players
-        %li
-          %a{:href => '/upload'} Upload
-    = yield
+      %h1 
+        %a{:href => '/'} loltistics
+      #navigation
+        %ul
+          %li
+            %a{:href => '/matches'} Matches
+          %li
+            %a{:href => '/players'} Players
+          %li
+            %a{:href => '/upload'} Upload
+          %li
+            %a{:href => '/logs'} Logs
+    #content= yield
+    #footer

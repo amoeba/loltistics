@@ -12,4 +12,8 @@ module LOL
   def self.map_name(map_id)
     MAPS[map_id] or 'Unknown Map'
   end
+  
+  def self.item_name(item_id)
+    ITEMS[item_id] or 'Unknown Item'
+  end
 end

@@ -1,3 +1,15 @@
 - team.each do |player|
   %tr
     = haml(:_team_player, :layout => false, :locals => { :player => player })
+%tr
+  %th
+  %th Average Player Level
+  %th Average Player ELO
+  %th Team Total K/D/A
+%tr
+  %td
+  %td= team.inject(0) { |sum, p| sum + p['level'].to_i } / team.length
+  %td= team.inject(0) { |sum, p| sum + p['elo'].to_i } / team.length
+  %td= team.inject(0) { |sum, p| sum + p['statistics']['8'].to_i }
+  %td= team.inject(0) { |sum, p| sum + p['statistics']['4'].to_i }
+  %td= team.inject(0) { |sum, p| sum + p['statistics']['48'].to_i }

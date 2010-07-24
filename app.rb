@@ -1,8 +1,4 @@
 require 'sinatra'
-
-require "sinatra/reloader" if development?
-require 'pp' if development?
-
 require 'uri'
 require 'mongo'
 require 'haml'

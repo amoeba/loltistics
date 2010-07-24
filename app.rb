@@ -98,28 +98,59 @@ get '/upload' do
 end
 
 post '/upload' do
+  filename = params['qqfile'] or params['file']
   file = params[:file] ? params[:file][:tempfile] : env['rack.input']
-  @result = LOL.parse_file(file.read)
   
-  @result[:matches].each do |k, v|
-    matches.insert(v) unless matches.find_one({'id' => k})
+  time_started = Time.now
+  @result = LOL.parse_file(file.read)
+  time_to_parse = Time.now - time_started
+  
+  @result[:matches].each do |match_key, match|
+    matches.insert(match) unless matches.find_one({'id' => match_key})
   end
   
-  @result[:players].each do |k, v|
-    existing_player = players.find_one('summoner_name' => v[:summoner_name])
+  @result[:players].each do |player|
+    existing_player = players.find_one({:summoner_name => player[:summoner_name]})
   
     if existing_player
-      players.save(existing_player) unless existing_player['last_game_timestamp'] < v[:last_game_timestamp]
+      if existing_player['last_game_timestamp'].to_i < player[:last_game_timestamp].to_i
+        players.save(existing_player.merge!(player))
+      end
     else
-      players.insert(v)
+      players.insert(player)
+    end
+    
+    # Add matches to the Player
+    player_match = matches.find_one({'id' => player[:last_match_key]})
+    
+    if player_match
+      puts "Finding and modifying"
+      players.find_and_modify({
+        :query => { :summoner_name => player[:summoner_name] }, 
+        :update => { 
+          '$push' => { :matches => player_match}
+        }
+      })
     end
   end
+  
+  matches_found = @result[:matches].keys
+  players_found = @result[:players].collect { |p| "#{p[:locale]}-#{p[:summoner_name]}" }
+  
+  logs.insert({
+    :filename => filename,
+    :parsed_at => time_started,
+    :parse_time => time_to_parse,
+    :matches_found => matches_found,
+    :players_found => players_found,
+    :reduced_file => @result[:reduced_file]
+  })
   
   content_type :json
   
   {
     :success => true,
-    :matches => @result[:matches].keys,
-    :players => @result[:players].values.collect { |p| "#{p[:locale]}-#{p[:summoner_name]}" }
+    :matches => matches_found,
+    :players => players_found
   }.to_json
 end

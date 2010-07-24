@@ -74,112 +74,130 @@ module LOL
   end
 
   def self.parse_file(content)
+    # The reduced file is what we save for later so we can reparse
+    # uploaded logs
+    # 
+    # The reduced file is saved to the database and contains:
+    #   
+    #   - Locale
+    #   - GameDTO Messages
+    #   - EndOfGameStats Messages
+    #   - Item messages
+    
+    @reduced_file = []
+    
     @messages = content.split /^\d+\/\d+\/\d+ \d+:\d+:\d+\.\d+ /
-    @locale, @matches, @players = nil, {}, {}
-
+    @locale, @matches, @players = nil, {}, []
     match, match_key = nil, ''
     items, finding_items = [], false
 
     @messages.each do |message|
       # Locale
-      @locale = (message.scan 'locale = en_US') ? 'US' : 'EU'
-
+      if @locale.nil? and message.match 'Initializing for locale'
+        @reduced_file.push(message)
+        @locale = (message.scan 'en_US') ? 'US' : 'EU'
+      end
+      
       # GameDTO
       if message.match 'gameState = "TERMINATED"'
+        @reduced_file.push(message)
+        
         dto = parse(message)
         match_key = @locale + dto['body']['id']
   
-        @matches[match_key] ||= {}
-        @matches[match_key].merge!({
+        match_data = {
           :id => match_key,
           :map_id => dto['body']['mapId'],
           :created => dto['body']['creationTime']
-        })
+        }
+        
+        if @matches[match_key]
+          @matches[match_key].merge!(match_data)
+        else
+          @matches[match_key] = match_data
+        end
       end
 
       # EndOfGameStats
       if message.match 'EndOfGameStats\)#1'
+        @reduced_file.push(message)
+        
         eog = parse(message)
         match_key = @locale + eog['body']['gameId']
   
-        @matches[match_key] = {} unless @matches[match_key]
-        @matches[match_key].merge!({
+        match_data = {
           :queue_type => eog['body']['queueType'],
           :game_length => eog['body']['gameLength'],
           :game_type => eog['body']['gameType'],
           :ranked => eog['body']['ranked'],
-          :teams => {
-            :winning => [],
-            :losing => []
-          }
-          })
+          :players => []
+        }
   
-        match = @matches[match_key]
-
-        [[match[:teams][:winning], eog['body']['otherTeamPlayerParticipantStats']['list']['source']],
-         [match[:teams][:losing], eog['body']['teamPlayerParticipantStats']['list']['source']]].each do |team, players|
-            players.each do |player|
-              new_player = {
-                :locale => @locale,
-                :summoner_name => player['summonerName'],
-                :elo => player['elo'],
-                :level => player['level'],
-                :wins => player['wins'],
-                :losses => player['losses'],
-                :leaves => player['leaves'],
-                :profile_icon_id => player['profileIconId'],
-                :last_game_timestamp => eog['timestamp']
-              }
+        # Winning team is teamId=100 and teamPlayerParticipantStats
+        all_players = eog['body']['teamPlayerParticipantStats']['list']['source'] + eog['body']['otherTeamPlayerParticipantStats']['list']['source']
         
-              
-              player_record = @players[player['summonerName']]
-        
-              if player_record
-                player_record.merge!(new_player) unless (player_record[:last_game_timestamp] > new_player[:last_game_timestamp])
-              else
-                @players[player['summonerName']] = new_player.clone
-              end
-        
-              @players[player['summonerName']][:matches] ||= []
-              @players[player['summonerName']][:matches].push @locale + eog['body']['gameId']
-        
-              # Match-specific attributes
-              new_player.merge!({
-                :skin_name => player['skinName'],
-                :statistics => {},
-                :items => []
-              })
-        
-              player['statistics']['list']['source'].each do |s|
-                new_player[:statistics][s['statTypeId']] = s['value']
-              end
-        
-              team.push(new_player)
-            end
+        all_players.each do |player|
+          new_player = {
+            :locale => @locale,
+            :summoner_name => player['summonerName'],
+            :elo => player['elo'],
+            :level => player['level'],
+            :wins => player['wins'],
+            :losses => player['losses'],
+            :leaves => player['leaves'],
+            :profile_icon_id => player['profileIconId'],
+            :last_game_timestamp => eog['timestamp'],
+            :last_match_key => match_key
+          }
+  
+          @players.push(new_player.clone)
     
+          # Match-specific attributes
+          new_player.merge!({
+            :team_id => player['teamId'],
+            :elo_change => player['eloChange'],
+            :skin_name => player['skinName'],
+            :statistics => {},
+            :items => []
+          })
+    
+          player['statistics']['list']['source'].each do |s|
+            new_player[:statistics][s['statTypeId']] = s['value']
+          end
+    
+          match_data[:players].push(new_player.clone)
+        end
+        
+        if @matches[match_key]
+          @matches[match_key].merge!(match_data)
+        else
+          @matches[match_key] = match_data
         end
       end
 
       # Items
       if !finding_items and message.match 'Found end of game item :'
+        @reduced_file.push(message)
+        
         finding_items = true
       end
   
       if finding_items        
         if message.match 'Found end of game item'
+          @reduced_file.push(message)
+          
           item = message.match 'Found end of game item : \d+ , (\d+)'     
           items.push item[1]
     
         elsif message.match 'ENDOFGAME: Player: '
-    
+          @reduced_file.push(message)
+          
           player_name = (message.match 'Player: (.+) has items')[1]
     
           existing_player = nil
-          match[:teams][:winning].each do |p|
-            existing_player = p if p[:summoner_name] == player_name
-          end
-    
-          match[:teams][:losing].each do |p|
+          
+          match = @matches[match_key]
+          match[:players].each do |p|
             existing_player = p if p[:summoner_name] == player_name
           end
     
@@ -190,15 +208,15 @@ module LOL
   
         # Stop looking for items when we reach the end
         finding_items = false if !message.match 'EndOfGameStatsController'
-
       end
     end
 
 
     # Remove invalid matches  
-    @matches = @matches.reject { |match| !@matches[match].has_key?(:teams) }
+    @matches = @matches.reject { |match_key, match| !match.has_key?(:game_length) }
 
     {
+      :reduced_file => @reduced_file.join,
       :matches => @matches,
       :players => @players
     }

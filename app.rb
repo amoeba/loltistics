@@ -31,7 +31,12 @@ end
 if db
   matches = db.collection('matches')
   players = db.collection('players')
+  logs = db.collection('logs')
 end
+
+matches.remove()
+players.remove()
+logs.remove()
 
 # Configuration
 set :haml, {:format => :html5 }
@@ -83,6 +88,12 @@ get %r{/players/([EUS]{2})-(.+)} do |locale, name|
   raise PlayerNotFound if @player.nil?
 
   haml :player
+end
+
+get '/logs' do
+  @logs = logs.find()
+  
+  haml :logs
 end
 
 get '/upload' do

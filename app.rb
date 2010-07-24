@@ -17,11 +17,12 @@ if ENV['MONGOHQ_URL']
   db = connection.db(ENV['MONGOHQ_DB'])
   auth = db.authenticate(ENV['MONGOHQ_USER'], ENV['MONGOHQ_PASSWORD'])
 else
-  #db = Mongo::Connection.new('flame.mongohq.com', 27078).db('loltistics')
-  #auth = db.authenticate('amoeba', 'Ne2uMh')
+  connection = Mongo::Connection.new('flame.mongohq.com', 27074)
+  db = connection.db('loltistics-test')
+  auth = db.authenticate('amoeba', 'Ne2uMh')
   
-  connection = Mongo::Connection.new('127.0.0.1', 27017)
-  db = connection.db('loltistics')
+  #connection = Mongo::Connection.new('127.0.0.1', 27017)
+  #db = connection.db('loltistics')
 end
 
 if db

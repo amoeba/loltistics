@@ -109,12 +109,10 @@ post '/upload' do
   end
   
   @result[:players].each do |name, player|
-    puts "Processing #{name}"
     existing_player = players.find_one({:summoner_name => name})
-    puts "player exists" if existing_player
+
     if existing_player
       if existing_player['last_game_timestamp'].to_i < player[:last_game_timestamp].to_i
-        puts "this is newer data"
         existing_player.merge!(player)
       end
     

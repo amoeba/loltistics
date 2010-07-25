@@ -10,12 +10,12 @@
   %li= "Wins: #{@player['wins']}"
   %li= "Losses: #{@player['losses']}"
   %li= "Leaves: #{@player['leaves']}"
-  %li
-    = "Last Match: #{@player['last_game_timestamp']}"
-    %a{:href => "/matches/#{@player['last_match_key']}"}= @player['last_match_key']
-  
+  %li= "Last Match: #{@player['last_game_timestamp']}"
+    
+%h3 Matches
 - if @player['matches']
-  %h3 Matches
   %ul
     - @player['matches'].each do |match|
-      %li= "#{match['id']}"
+      %li
+        %a{:href => "/matches/#{match}"}= match
+    

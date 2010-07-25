@@ -13,9 +13,10 @@ if ENV['MONGOHQ_URL']
   db = connection.db(ENV['MONGOHQ_DB'])
   auth = db.authenticate(ENV['MONGOHQ_USER'], ENV['MONGOHQ_PASSWORD'])
 else
-  connection = Mongo::Connection.new('flame.mongohq.com', 27074)
+  #connection = Mongo::Connection.new('flame.mongohq.com', 27074)
+  connection = Mongo::Connection.new('localhost', 27017)
   db = connection.db('loltistics-test')
-  auth = db.authenticate('amoeba-test', 'amoeba-test')
+  #auth = db.authenticate('amoeba-test', 'amoeba-test')
 end
 
 if db
@@ -66,6 +67,9 @@ get '/matches/:id' do |id|
   @match = matches.find_one('id' => id)
   raise MatchNotFound if @match.nil?
   
+  @winning_team = @match['players'].select { |p| p['team_id'] == '100' }
+  @losing_team = @match['players'].select { |p| p['team_id'] == '200' }
+  
   haml :match
 end
 
@@ -107,27 +111,21 @@ post '/upload' do
   @result[:players].each do |name, player|
     puts "Processing #{name}"
     existing_player = players.find_one({:summoner_name => name})
-  
+    puts "player exists" if existing_player
     if existing_player
       if existing_player['last_game_timestamp'].to_i < player[:last_game_timestamp].to_i
-        players.save(existing_player.merge!(player))
+        puts "this is newer data"
+        existing_player.merge!(player)
       end
+    
+      # Add matches to the Player
+      existing_player['matches'] += player[:matches]
+      existing_player['matches'].uniq!
+      
+      players.save(existing_player)
     else
       players.insert(player)
     end
-    
-    ## Add matches to the Player
-    #player_match = matches.find_one({'id' => player[:last_match_key]})
-    #
-    #if player_match
-    #  puts "Finding and modifying"
-    #  players.find_and_modify({
-    #    :query => { :summoner_name => player[:summoner_name] }, 
-    #    :update => { 
-    #      '$push' => { :matches => player_match}
-    #    }
-    #  })
-    #end
   end
   
   matches_found = @result[:matches].keys

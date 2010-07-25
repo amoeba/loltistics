@@ -108,7 +108,7 @@ module LOL
         match_data = {
           :id => match_key,
           :map_id => dto['body']['mapId'],
-          :created => dto['body']['creationTime']
+          :creation_time => dto['body']['creationTime']
         }
         
         if @matches[match_key]
@@ -147,32 +147,29 @@ module LOL
             :leaves => player['leaves'],
             :profile_icon_id => player['profileIconId'],
             :last_game_timestamp => eog['timestamp'],
-            :last_match_key => match_key
-          }
-          existing_player = @players[new_player[:summoner_name]]
-          
-          if existing_player
-            if existing_player[:last_game_timestamp].to_i < new_player[:last_game_timestamp].to_i
-              @players[new_player[:summoner_name]] = new_player.clone
-            end
-          else
-            @players[new_player[:summoner_name]] = new_player.clone
-          end
-    
-          # Match-specific attributes
-          new_player.merge!({
             :team_id => player['teamId'],
             :elo_change => player['eloChange'],
             :skin_name => player['skinName'],
             :statistics => {},
-            :items => []
-          })
-    
+            :items => [],
+            :matches => []
+          }
+          
           player['statistics']['list']['source'].each do |s|
             new_player[:statistics][s['statTypeId']] = s['value']
           end
+          
+          existing_player = @players[player['summonerName']]
+          existing_matches = @players[player['summonerName']][:matches] if existing_player
+          
+          if existing_player.nil? or existing_player[:last_game_timestamp].to_i < new_player[:last_game_timestamp].to_i
+            @players[player['summonerName']] = new_player
+          end
+          
+          @players[player['summonerName']][:matches] = existing_matches if existing_matches
+          @players[player['summonerName']][:matches].push(match_key)
     
-          match_data[:players].push(new_player.clone)
+          match_data[:players].push(new_player)
         end
         
         if @matches[match_key]

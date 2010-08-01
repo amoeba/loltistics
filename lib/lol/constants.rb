@@ -135,7 +135,7 @@ module LOL
     'ChemicalMan' => 'Singed',
     'Minotaur' => 'Alistair',
     'Pirate' => 'Gangplank',
-    'DrMundu' => 'Dr. Mundo'
+    'DrMundo' => 'Dr. Mundo'
   }
   
   MAPS = {

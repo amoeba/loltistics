@@ -86,7 +86,7 @@ module LOL
     
     @reduced_file = []
     
-    @messages = content.split /^\d+\/\d+\/\d+ \d+:\d+:\d+\.\d+ /
+    @messages = content.split /^[\d\/]/
     @locale, @matches, @players = nil, {}, {}
     match, match_key = nil, ''
     items, finding_items = [], false
@@ -108,14 +108,12 @@ module LOL
         match_data = {
           :id => match_key,
           :map_id => dto['body']['mapId'],
-          :creation_time => dto['body']['creationTime']
+          :creation_time => dto['body']['creationTime'],
+          :game_type => dto['body']['gameType']
         }
         
-        if @matches[match_key]
-          @matches[match_key].merge!(match_data)
-        else
-          @matches[match_key] = match_data
-        end
+        @matches[match_key] ||= {}
+        @matches[match_key].merge!(match_data)
       end
 
       # EndOfGameStats
@@ -124,7 +122,7 @@ module LOL
         
         eog = parse(message)
         match_key = @locale + eog['body']['gameId']
-  
+        
         match_data = {
           :queue_type => eog['body']['queueType'],
           :game_length => eog['body']['gameLength'],
@@ -132,7 +130,7 @@ module LOL
           :ranked => eog['body']['ranked'],
           :players => []
         }
-  
+        
         # Winning team is teamId=100 and teamPlayerParticipantStats
         all_players = eog['body']['teamPlayerParticipantStats']['list']['source'] + eog['body']['otherTeamPlayerParticipantStats']['list']['source']
         
@@ -140,43 +138,61 @@ module LOL
           new_player = {
             :locale => @locale,
             :summoner_name => player['summonerName'],
-            :elo => player['elo'],
             :level => player['level'],
             :wins => player['wins'],
             :losses => player['losses'],
             :leaves => player['leaves'],
             :profile_icon_id => player['profileIconId'],
             :last_game_timestamp => eog['timestamp'],
+            :matches => [],
+            :elo => {}
+          }
+          
+          match_player = {
+            :locale => @locale,
+            :summoner_name => player['summonerName'],
+            :level => player['level'],
             :team_id => player['teamId'],
+            :elo => player['elo'],
             :elo_change => player['eloChange'],
             :skin_name => player['skinName'],
             :statistics => {},
-            :items => [],
-            :matches => []
+            :items => []
           }
           
+          # Player Statistics
           player['statistics']['list']['source'].each do |s|
-            new_player[:statistics][s['statTypeId']] = s['value']
+            match_player[:statistics][s['statTypeId']] = s['value']
           end
           
           existing_player = @players[player['summonerName']]
           existing_matches = @players[player['summonerName']][:matches] if existing_player
+          existing_elo = @players[player['summonerName']][:elo] if existing_player
           
           if existing_player.nil? or existing_player[:last_game_timestamp].to_i < new_player[:last_game_timestamp].to_i
             @players[player['summonerName']] = new_player
           end
           
           @players[player['summonerName']][:matches] = existing_matches if existing_matches
-          @players[player['summonerName']][:matches].push(match_key)
+          @players[player['summonerName']][:elo] = existing_elo if existing_elo
+          
+          # Only add ELO and Matches for non-PRACTICE_GAMES
+          if match_data[:game_type] != "PRACTICE_GAME"
+            # ELO Type
+            # Older log files don't have a queueType in their EOGStats
+            if player['elo']
+              elo_type = match_data[:queue_type] or 'NORMAL'
+              @players[player['summonerName']][:elo].merge!({elo_type => player['elo']})
+            end
+            
+            @players[player['summonerName']][:matches].push(match_key)
+          end
     
-          match_data[:players].push(new_player)
+          match_data[:players].push(match_player)
         end
         
-        if @matches[match_key]
-          @matches[match_key].merge!(match_data)
-        else
-          @matches[match_key] = match_data
-        end
+        @matches[match_key] ||= {}
+        @matches[match_key].merge!(match_data)
       end
 
       # Items
@@ -215,10 +231,12 @@ module LOL
       end
     end
 
-
     # Remove invalid matches  
-    @matches = @matches.reject { |match_key, match| !match.has_key?(:game_length) }
-
+    # Remove practice games
+    @matches = @matches.reject do |match_key, match|
+      !match.has_key?(:game_length) or match[:game_type] == "PRACTICE_GAME"
+    end
+    
     {
       :reduced_file => @reduced_file.join,
       :matches => @matches,

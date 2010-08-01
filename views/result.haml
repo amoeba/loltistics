@@ -1,11 +1,19 @@
+%h2 Upload Result
+
+%h3 Matches
 - if @result[:matches].length == 0
   No matches found, 
 - else
-  - @result[:matches].keys.each do |match|
-    %a{:href => "/matches/#{match}"}= match
+  %ul
+    - @result[:matches].each do |match|
+      %li
+        %a{:href => "/matches/#{match}"}= match
   
+%h3 Players
 - if @result[:players].length == 0
   No players found
 - else
-  - @result[:players].each do |name, player|
-    %a{:href => "/matches/#{player[:locale]}-#{player[:summoner_name]}"}= "#{player[:locale]}-#{player[:summoner_name]}"
+  %ul
+    - @result[:players].each do |player|
+      %li
+        %a{:href => "/players/#{player}"}= "#{player}"

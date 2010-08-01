@@ -1,0 +1,11 @@
+%h2 Send Me Feedback
+%form{:method => 'post'}
+  %label{:for => 'from'} Your Email (optional):
+  %br
+  %input#feedback-from{:type => 'text', :name => 'feedback-from', :size => '40'}
+  %br
+  %label{:for => 'message'} Your Message:
+  %br
+  %textarea#feedback-message{:name => 'feedback-message', :rows => '10', :cols => '80'}
+  %br
+  %input{:type => 'submit', :value => 'Send Feedback'}

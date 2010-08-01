@@ -1,14 +1,13 @@
-%td
+%td.summoner
   %a{:href => "/players/#{player['locale']}-#{player['summoner_name']}"}= player['summoner_name']
-  %br
-  %img{:src => "/images/champions/#{LOL.champion_name(player['skin_name'])}.png", :alt => LOL.champion_name(player['skin_name']), :width => 60, :height => 60}
-  %br
+%td.champion
+  %img{:src => "/images/champions/#{LOL.champion_name(player['skin_name'])}.png", :alt => LOL.champion_name(player['skin_name']), :width => 30, :height => 30}
   = LOL.champion_name(player['skin_name'])
-%td= player['level']
-%td= "#{player['elo']} (#{player['elo_change']})"
-%td= player['statistics']['8']
-%td= player['statistics']['4']
-%td= player['statistics']['48']
-%td
+%td.level= player['level']
+%td.elo= "#{player['elo']} (#{player['elo_change']})"
+%td.kills= player['statistics']['8']
+%td.deaths= player['statistics']['4']
+%td.assists= player['statistics']['48']
+%td.items
   - player['items'].each do |item|
-    %img{:src => "/images/items/#{item}.png", :alt => LOL::ITEMS[item], :width => 32, :height => 32, :title => LOL.item_name(item)}
+    %img{:src => "/images/items/#{item}.png", :alt => LOL::ITEMS[item], :width => '32', :height => '32', :title => LOL.item_name(item)}

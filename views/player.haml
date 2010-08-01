@@ -1,17 +1,31 @@
 %h2
-  %a{:href => "/players/#{@player['locale']}-#{@player['summoner_name']}"}= @player['summoner_name']
+  %a{:href => "/players/#{@player['locale']}-#{@player['summoner_name']}"}= "#{@player['locale']}-#{@player['summoner_name']}"
 
-%img{:src => "/images/summoner_icons/#{@player['profile_icon_id']}.jpg", :alt => "Summoner Icon"}
+%img{:src => "/images/summoner_icons/#{@player['profile_icon_id']}.jpg", :alt => "Summoner Icon", :width => '62', :height => '64'}
 
 %ul
   %li= "Level: #{@player['level']}"
-  %li= "Locale: #{@player['locale']}"
-  %li= "ELO: #{@player['elo']}"
+  %li= "Server: #{@player['locale']}"
   %li= "Wins: #{@player['wins']}"
   %li= "Losses: #{@player['losses']}"
   %li= "Leaves: #{@player['leaves']}"
-  %li= "Last Match: #{@player['last_game_timestamp']}"
-    
+  %li= "Last Match Timestamp: #{@player['last_game_timestamp'].to_i}"
+
+#elo
+  %h3 ELO
+  .elobox
+    %h4 Unranked
+    .elo-value= @player['elo']['NORMAL'] or "?"
+  .elobox
+    %h4 Premade 3v3
+    .elo-value= @player['elo']['RANKED_PREMADE_3v3'] or "?"
+  .elobox
+    %h4 Solo 5v5
+    .elo-value= @player['elo']['RANKED_SOLO_5v5'] or "?"
+  .elobox
+    %h4 Premade 5v5
+    .elo-value= @player['elo']['RANKED_PREMADE_5v5'] or "?"
+  
 %h3 Matches
 - if @player['matches']
   %ul

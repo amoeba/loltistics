@@ -3,6 +3,8 @@
 
 %ul
   %li= "Map: #{LOL.map_name(@match['map_id'])}"
+  %li
+    %img{:src => "/images/maps/#{@match['map_id']}.png", :alt => LOL.map_name(@match['map_id'])}
   %li= "Created: #{@match['creation_time']}"
   %li= "Queue Type: #{@match['queue_type']}"
   %li= "Game Type: #{@match['game_type']}"
@@ -10,32 +12,10 @@
   %li= "Game Length: #{@match['game_length'].to_i / 60} minutes"
 
 %h2 Winning Team
-%table
-  %thead
-    %tr
-      %th Summoner
-      %th Level
-      %th ELO
-      %th Kills
-      %th Deaths
-      %th Assisits
-      %th Items
-  %tbody
-    = haml(:_team, :layout => false, :locals => { :team => @winning_team })
+= haml(:_team, :layout => false, :locals => { :team => @winning_team })
 
 %h2 Losing Team
-%table
-  %thead
-    %tr
-      %th Summoner
-      %th Level
-      %th ELO
-      %th Kills
-      %th Deaths
-      %th Assisits
-      %th Items
-  %tbody
-    = haml(:_team, :layout => false, :locals => { :team => @losing_team })
+= haml(:_team, :layout => false, :locals => { :team => @losing_team })
 
 %script{:type => 'text/javascript', :src => '/js/jquery.tools.min.js'}
 %script{:type => 'text/javascript', :src => '/js/match.js'}

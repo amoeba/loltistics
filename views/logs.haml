@@ -3,11 +3,12 @@
 %table
   %thead
     %tr
-      %th Filename
-      %th Parsed At
-      %th Parse Time
-      %th Matches Found
-      %th Players Found
+      %th.filename Filename
+      %th.parsed_at Parsed At
+      %th.parse_time Parse Time (s)
+      %th.matches_found Matches Found
+      %th.players_found Players Found
+      %th.reparse
   %tbody
   - @logs.each do |log|
     %tr
@@ -16,3 +17,5 @@
       %td= log['parse_time']
       %td= log['matches_found'].collect { |m| "<a href=\"/matches/#{m}\">#{m}</a>" }.join(', ')
       %td= log['players_found'].collect { |p| "<a href=\"/players/#{p}\">#{p}</a>" }.join(', ')
+      %td
+        %a{:href => "/reparse?filename=#{log['filename']}"} reparse

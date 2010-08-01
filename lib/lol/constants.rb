@@ -134,7 +134,8 @@ module LOL
     'Armsmaster' => 'Jax',
     'ChemicalMan' => 'Singed',
     'Minotaur' => 'Alistair',
-    'Pirate' => 'Gangplank'
+    'Pirate' => 'Gangplank',
+    'DrMundu' => 'Dr. Mundo'
   }
   
   MAPS = {

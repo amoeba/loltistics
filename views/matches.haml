@@ -1,7 +1,29 @@
-%h2 All Matches
+%h2 Matches
 
-%ul
-  - @matches.each do |match|
-    %li
-      %a{:href => "/matches/#{match['id']}"}= match['id']
-  
+#normal
+  %h3 Normal
+  %ul
+    - @matches.each do |match|
+      %li
+        %a{:href => "/matches/#{match['id']}"}= match['id']
+        
+#ranked-premade-3v3
+  %h3 Ranked Premade 3v3
+  %ul
+    - @matches.select { |m| m['queue_type'] == 'RANKED_PREMADE_3v3'}.each do |match|
+      %li
+        %a{:href => "/matches/#{match['id']}"}= match['id']
+
+#ranked-solo-5v5
+  %h3 Ranked Solo 5v5
+  %ul
+    - @matches.select { |m| m['queue_type'] == 'RANKED_SOLO_5v5'}.each do |match|
+      %li
+        %a{:href => "/matches/#{match['id']}"}= match['id']
+
+#ranked-premade-5v5
+  %h3 Ranked Premade 5v5
+  %ul
+    - @matches.select { |m| m['queue_type'] == 'RANKED_PREMADE_5v5'}.each do |match|
+      %li
+        %a{:href => "/matches/#{match['id']}"}= match['id']        

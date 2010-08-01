@@ -1,13 +1,55 @@
 html, body, h1, h2, h3, h4, h5, h6, p, span, table, thead, tbody, tfoot, th, tr, td,
-form, fieldset, label, input, textarea, select, option
+form, fieldset, label, input, textarea, select, option,ol, ul, li
   margin: 0
   padding: 0
   
 body
   font:
     family: Sans-serif
-    size: 16px
+    size: 14px
   padding: 1.5em
+
+p
+  margin-top: 1.5em
+  
+input, textarea
+  font-size: inherit
+
+ul, ol
+  ul, ol
+    margin-top: 0
+    margin-bottom: 0
+    
+ol, ul
+  margin: 1.5em 3em
+  
+table
+  border-collapse: collapse
+  
+  .summoner
+    width: 10em
+  .champion
+    width: 10em
+  .level
+    width: 2em
+  .elo
+    width: 6em
+  .kills
+    width: 2em
+  .deaths
+    width: 2em
+  .assists
+    width: 2em
+  .items
+    width: 18em
+  
+  td.summoner, td.champion, td.items
+    text-align: left
+    
+th, td
+  padding: 0.25em
+  border-top: 1px solid #ccc
+  text-align: center
 
 .tooltip
   display: none
@@ -21,23 +63,57 @@ body
   -webkit-border-radius: 5px
   border-radius: 5px
   
+#header
+  h1
+    a
+      color: #c00
+    
+  margin-bottom: 1.5em
+  a
+    text-decoration: none
+    color: #00c
+  ul
+    margin: 0
+    padding: 0
+    list-style-type: none
+    
+    li
+      display: inline-block
+      padding-right: 1.5em
+    
+
+#elo
+  height: 10em
+  clear: right
+  
+.elobox
+  display: block
+  float: left
+  width: 10em
+  height: 6em
+  border: 1px solid #CCC
+  text-align: center
+
+.elo-value
+  font-size: 2em
+  
 .qq-uploader
   position: relative
   width: 100%
 
 .qq-upload-button
+  margin-top: 1em
   display: inline-block
-  width: 105px
-  padding: 7px 0
+  padding: 1em
   text-align: center
-  background: #880000
+  background: #cc0000
   color: #fff
+  -moz-border-radius: 5px
+  -webkit-border-radius: 5px
+  border-radius: 5px
 
 .qq-upload-button-hover
-  background: #cc0000
-  
-.qq-upload-button-focus
-  outline: 1px dotted black
+  background: #880000
 
 .qq-upload-drop-area
   position: absolute
@@ -61,17 +137,6 @@ body
 .qq-upload-drop-area-active
   background: #FF7171
 
-.qq-upload-list 
-  //margin: 15px 35px
-  //padding: 0
-  //list-style: disc
-
-.qq-upload-list li
-  //margin: 0
-  //padding: 0
-  //line-height: 15px
-  //font-size: 12px
-
 .qq-upload-file, .qq-upload-spinner, .qq-upload-size, .qq-upload-cancel, .qq-upload-failed-text
   margin-right: 7px
 
@@ -85,11 +150,13 @@ body
   vertical-align: text-bottom
 
 .qq-upload-size, .qq-upload-cancel
-  //font-size: 11px
+
 
 .qq-upload-failed-text
   display: none
-  color: red
+  color: white
+  background: #c00
+  padding: 0 0.25em
   
 .qq-upload-fail .qq-upload-failed-text
   display: inline

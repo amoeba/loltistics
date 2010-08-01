@@ -74,18 +74,6 @@ module LOL
   end
 
   def self.parse_file(content)
-    # The reduced file is what we save for later so we can reparse
-    # uploaded logs
-    # 
-    # The reduced file is saved to the database and contains:
-    #   
-    #   - Locale
-    #   - GameDTO Messages
-    #   - EndOfGameStats Messages
-    #   - Item messages
-    
-    @reduced_file = []
-    
     @messages = content.split /^[\d\/]/
     @locale, @matches, @players = nil, {}, {}
     match, match_key = nil, ''
@@ -94,13 +82,11 @@ module LOL
     @messages.each do |message|
       # Locale
       if @locale.nil? and message.match 'Initializing for locale'
-        @reduced_file.push(message)
         @locale = (message.scan 'en_US') ? 'US' : 'EU'
       end
       
       # GameDTO
       if message.match 'gameState = "TERMINATED"'
-        @reduced_file.push(message)
         
         dto = parse(message)
         match_key = @locale + dto['body']['id']
@@ -118,7 +104,6 @@ module LOL
 
       # EndOfGameStats
       if message.match 'EndOfGameStats\)#1'
-        @reduced_file.push(message)
         
         eog = parse(message)
         match_key = @locale + eog['body']['gameId']
@@ -197,20 +182,17 @@ module LOL
 
       # Items
       if !finding_items and message.match 'Found end of game item :'
-        @reduced_file.push(message)
         
         finding_items = true
       end
   
       if finding_items        
         if message.match 'Found end of game item'
-          @reduced_file.push(message)
           
           item = message.match 'Found end of game item : \d+ , (\d+)'     
           items.push item[1]
     
         elsif message.match 'ENDOFGAME: Player: '
-          @reduced_file.push(message)
           
           player_name = (message.match 'Player: (.+) has items')[1]
     
@@ -238,7 +220,6 @@ module LOL
     end
     
     {
-      :reduced_file => @reduced_file.join,
       :matches => @matches,
       :players => @players
     }

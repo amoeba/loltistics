@@ -82,8 +82,7 @@ class Loltistics < Sinatra::Base
         :parsed_at => time_started,
         :parse_time => time_to_parse,
         :matches_found => matches_found,
-        :players_found => players_found,
-        :reduced_file => result[:reduced_file]
+        :players_found => players_found
       })
     
       {
@@ -145,14 +144,6 @@ class Loltistics < Sinatra::Base
     @logs = @@logs_collection.find()
   
     haml :logs
-  end
-
-  get '/reparse' do
-    log = @@logs_collection.find_one({:filename => params[:filename]})
-    
-    @result = process_uploaded_file(log['filename'], log['reduced_file'])
-    
-    haml :result
   end
   
   get '/feedback' do

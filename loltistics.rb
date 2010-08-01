@@ -142,7 +142,7 @@ class Loltistics < Sinatra::Base
   end
 
   get '/logs' do
-    @logs = @@logs_collection.find().sort(['parsed_at', :descending])
+    @logs = @@logs_collection.find()
   
     haml :logs
   end

@@ -1,29 +1,31 @@
 %h2 Matches
 
-#normal
-  %h3 Normal
-  %ul
-    - @matches_normal.each do |match|
-      %li
-        %a{:href => "/matches/#{match['id']}"}= match['id']
-        
-#ranked-premade-3v3
-  %h3 Ranked Premade 3v3
-  %ul
-    - @matches_premade_3v3.each do |match|
-      %li
-        %a{:href => "/matches/#{match['id']}"}= match['id']
+#matches
+  .matchbox
+    %h3 Normal
+    %ul
+      - @matches_normal.each do |match|
+        %li
+          %a{:href => "/matches/#{match['id']}"}= match['id']   
+          
+  .matchbox
+    %h3 Ranked Premade 3v3
+    %ul
+      - @matches_premade_3v3.each do |match|
+        %li
+          %a{:href => "/matches/#{match['id']}"}= match['id']
 
-#ranked-solo-5v5
-  %h3 Ranked Solo 5v5
-  %ul
-    - @matches_solo_5v5.each do |match|
-      %li
-        %a{:href => "/matches/#{match['id']}"}= match['id']
+    
+  .matchbox
+    %h3 Ranked Solo 5v5
+    %ul
+      - @matches_solo_5v5.each do |match|
+        %li
+          %a{:href => "/matches/#{match['id']}"}= match['id']
 
-#ranked-premade-5v5
-  %h3 Ranked Premade 5v5
-  %ul
-    - @matches_premade_5v5.each do |match|
-      %li
-        %a{:href => "/matches/#{match['id']}"}= match['id']        
+  .matchbox
+    %h3 Ranked Premade 5v5
+    %ul
+      - @matches_premade_5v5.each do |match|
+        %li
+          %a{:href => "/matches/#{match['id']}"}= match['id']        

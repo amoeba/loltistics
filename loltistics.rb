@@ -109,10 +109,10 @@ class Loltistics < Sinatra::Base
     #@matches_solo_5v5 = @matches.select { |m| m['queue_type'] == 'RANKED_SOLO_5v5'}
     #@matches_premade_5v5 = @matches.select { |m| m['queue_type'] == 'RANKED_PREMADE_5v5'}
     
-    @matches_normal = @@matches_collection.find({:queue_type => 'NORMAL'})
-    @matches_premade_3v3 = @@matches_collection.find({:queue_type => 'RANKED_PREMADE_3v3'})
-    @matches_solo_5v5 = @@matches_collection.find({:queue_type => 'RANKED_SOLO_5v5'})
-    @matches_premade_5v5 = @@matches_collection.find({:queue_type => 'RANKED_PREMADE_5v5'})
+    @matches_normal = @@matches_collection.find({:queue_type => 'NORMAL'}).limit(10)
+    @matches_premade_3v3 = @@matches_collection.find({:queue_type => 'RANKED_PREMADE_3v3'}).limit(10)
+    @matches_solo_5v5 = @@matches_collection.find({:queue_type => 'RANKED_SOLO_5v5'}).limit(10)
+    @matches_premade_5v5 = @@matches_collection.find({:queue_type => 'RANKED_PREMADE_5v5'}).limit(10)
   
     haml :matches
   end

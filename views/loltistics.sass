@@ -12,8 +12,10 @@ body
 p
   margin-top: 1.5em
   
-input, textarea
-  font-size: inherit
+input[type=text], input[type=password], textarea
+  font: inherit
+  padding: 0.5em
+  margin-bottom: 1em
 
 ul, ol
   ul, ol
@@ -25,26 +27,6 @@ ol, ul
   
 table
   border-collapse: collapse
-  
-  .summoner
-    width: 10em
-  .champion
-    width: 10em
-  .level
-    width: 2em
-  .elo
-    width: 6em
-  .kills
-    width: 2em
-  .deaths
-    width: 2em
-  .assists
-    width: 2em
-  .items
-    width: 18em
-  
-  td.summoner, td.champion, td.items
-    text-align: left
     
 th, td
   padding: 0.25em
@@ -55,7 +37,7 @@ th, td
   display: none
   background: black
   font-size: 0.75em
-  width: 10em
+  width: 15em
   color: white
   line-height: 2em
   padding: 0 .5em
@@ -91,6 +73,7 @@ th, td
   height: 20em
   border: 1px solid #CCC
   text-align: center
+
 #elo
   clear: right
   
@@ -104,7 +87,38 @@ th, td
 
 .elo-value
   font-size: 2em
+
+table.match  
+  .summoner
+    width: 10em
+  .champion
+    width: 10em
+  .level
+    width: 2em
+  .elo
+    width: 6em
+  .kills
+    width: 2em
+  .deaths
+    width: 2em
+  .assists
+    width: 2em
+  .items
+    width: 18em
   
+  td.summoner, td.champion, td.items
+    text-align: left
+
+table.logs
+  .filename
+    width: 5em
+  .parsed_at
+  .parse_time
+  .matches_found
+    width: 10em
+  .players_found
+    width: 30em
+    
 .qq-uploader
   position: relative
   width: 100%

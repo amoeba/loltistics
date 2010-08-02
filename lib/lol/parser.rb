@@ -124,13 +124,10 @@ module LOL
             :locale => @locale,
             :summoner_name => player['summonerName'],
             :level => player['level'],
-            :wins => player['wins'],
-            :losses => player['losses'],
-            :leaves => player['leaves'],
             :profile_icon_id => player['profileIconId'],
             :last_game_timestamp => eog['timestamp'],
             :matches => [],
-            :elo => {}
+            :record => {}
           }
           
           match_player = {
@@ -152,24 +149,32 @@ module LOL
           
           existing_player = @players[player['summonerName']]
           existing_matches = @players[player['summonerName']][:matches] if existing_player
-          existing_elo = @players[player['summonerName']][:elo] if existing_player
+          existing_record = @players[player['summonerName']][:record] if existing_player
           
           if existing_player.nil? or existing_player[:last_game_timestamp].to_i < new_player[:last_game_timestamp].to_i
             @players[player['summonerName']] = new_player
+            
+            # Add or update the record
+            
+            # Older log files don't have a queueType in their EOGStats so we must have a fallback
+            record_type = match_data[:queue_type] or 'NORMAL'
+            
+            @players[player['summonerName']][:record] = existing_record if existing_record
+            @players[player['summonerName']][:record].merge!({
+                record_type => {
+                  :wins => player['wins'],
+                  :losses => player['losses'],
+                  :leaves => player['leaves'],
+                  :elo => player['elo']
+                }
+              }
+            )
           end
           
           @players[player['summonerName']][:matches] = existing_matches if existing_matches
-          @players[player['summonerName']][:elo] = existing_elo if existing_elo
           
-          # Only add ELO and Matches for non-PRACTICE_GAMES
+          # Only add Record and Matches for non-PRACTICE_GAMES
           if match_data[:game_type] != "PRACTICE_GAME"
-            # ELO Type
-            # Older log files don't have a queueType in their EOGStats
-            if player['elo']
-              elo_type = match_data[:queue_type] or 'NORMAL'
-              @players[player['summonerName']][:elo].merge!({elo_type => player['elo']})
-            end
-            
             @players[player['summonerName']][:matches].push(match_key)
           end
     

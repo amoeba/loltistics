@@ -6,30 +6,46 @@
 %ul
   %li= "Level: #{@player['level']}"
   %li= "Server: #{@player['locale']}"
-  %li= "Wins: #{@player['wins']}"
-  %li= "Losses: #{@player['losses']}"
-  %li= "Leaves: #{@player['leaves']}"
-  %li= "Last Match Timestamp: #{@player['last_game_timestamp'].to_i}"
 
-#elo
-  %h3 ELO
-  .elobox
-    %h4 Unranked
-    .elo-value= @player['elo']['NORMAL'] or "?"
-  .elobox
+#record
+  %h3 Record
+- if @player['record']
+  .record
+    - if @player['record']['NORMAL']
+      %h4 Normal
+      .wll= "#{@player['record']['NORMAL']['wins']}/#{@player['record']['NORMAL']['losses']}/#{@player['record']['NORMAL']['leaves']}"
+      .elo= "ELO: #{@player['record']['NORMAL']['elo']}"
+    - else
+      No record
+  .record
     %h4 Premade 3v3
-    .elo-value= @player['elo']['RANKED_PREMADE_3v3'] or "?"
-  .elobox
+    - if @player['record']['RANKED_PREMADE_3v3']
+      .wll= "#{@player['record']['RANKED_PREMADE_3v3']['wins']}/#{@player['record']['RANKED_PREMADE_3v3']['losses']}/#{@player['record']['RANKED_PREMADE_3v3']['leaves']}"
+      .elo= "ELO: #{@player['record']['RANKED_PREMADE_3v3']['elo']}"
+    - else
+      No record
+  .record
     %h4 Solo 5v5
-    .elo-value= @player['elo']['RANKED_SOLO_5v5'] or "?"
-  .elobox
+    - if @player['record']['RANKED_SOLO_5v5']
+      .wll= "#{@player['record']['RANKED_SOLO_5v5']['wins']}/#{@player['record']['RANKED_SOLO_5v5']['losses']}/#{@player['record']['RANKED_SOLO_5v5']['leaves']}"
+      .elo= "ELO: #{@player['record']['RANKED_SOLO_5v5']['elo']}"
+    - else
+      No record
+  .record
     %h4 Premade 5v5
-    .elo-value= @player['elo']['RANKED_PREMADE_5v5'] or "?"
+    - if @player['record']['RANKED_PREMADE_5v5']
+      .wll= "#{@player['record']['RANKED_PREMADE_5v5']['wins']}/#{@player['record']['RANKED_PREMADE_5v5']['losses']}/#{@player['record']['RANKED_PREMADE_5v5']['leaves']}"
+      .elo= "ELO: #{@player['record']['RANKED_PREMADE_5v5']['elo']}"
+    - else
+      No record
   
-%h3 Matches
-- if @player['matches']
-  %ul
-    - @player['matches'].each do |match|
-      %li
-        %a{:href => "/matches/#{match}"}= match
+#matches
+  %h3 Matches
+  - if @player['matches']
+    %ul
+      - @player['matches'].each do |match|
+        %li
+          %a{:href => "/matches/#{match}"}= match
+  - else
+    This player has no matches
     

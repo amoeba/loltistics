@@ -121,8 +121,8 @@ class Loltistics < Sinatra::Base
     @match = @@matches_collection.find_one({'id' => id})
     raise MatchNotFound if @match.nil?
   
-    @winning_team = @match['players'].select { |p| p['team_id'] == '100' }
-    @losing_team = @match['players'].select { |p| p['team_id'] == '200' }
+    @winning_team = @match['players'].select { |p| p['elo_change'].to_i > 0 }
+    @losing_team = @match['players'].select { |p| p['elo_change'].to_i < 0 }
   
     haml :match
   end

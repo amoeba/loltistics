@@ -116,7 +116,8 @@ module LOL
           :players => []
         }
         
-        # Winning team is teamId=100 and teamPlayerParticipantStats
+        # The player that sumbits the log is on team 100
+        # To find out which team won we need to look at ELO change
         all_players = eog['body']['teamPlayerParticipantStats']['list']['source'] + eog['body']['otherTeamPlayerParticipantStats']['list']['source']
         
         all_players.each do |player|
@@ -134,7 +135,6 @@ module LOL
             :locale => @locale,
             :summoner_name => player['summonerName'],
             :level => player['level'],
-            :team_id => player['teamId'],
             :elo => player['elo'],
             :elo_change => player['eloChange'],
             :skin_name => player['skinName'],

@@ -2,7 +2,7 @@
   %a{:href => "/players/#{player['locale']}-#{player['summoner_name']}"}= player['summoner_name']
 %td.champion
   %img{:src => "/images/champions/#{LOL.champion_name(player['skin_name'])}.png", :alt => LOL.champion_name(player['skin_name']), :width => 30, :height => 30}
-  = LOL.champion_name(player['skin_name'])
+  %span= "#{LOL.champion_name(player['skin_name'])}"
 %td.level= player['level']
 %td.elo= "#{player['elo']} (#{player['elo_change']})"
 %td.kills= player['statistics']['8']

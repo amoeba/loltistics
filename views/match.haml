@@ -1,5 +1,5 @@
 %h1
-  %a{:href => "/matches/#{@match['id']}"}= @match['id']
+  %a.match_key{:href => "/matches/#{@match['id']}"}= @match['id']
 
 %ul
   %li= "Map: #{LOL.map_name(@match['map_id'])}"

@@ -1,3 +1,5 @@
+$link_color: #00c
+
 html, body, h1, h2, h3, h4, h5, h6, p, span, table, thead, tbody, tfoot, th, tr, td,
 form, fieldset, label, input, textarea, select, option,ol, ul, li
   margin: 0
@@ -30,8 +32,10 @@ table
     
 th, td
   padding: 0.25em
-  border-top: 1px solid #ccc
   text-align: center
+
+td
+  border-top: 1px solid #ccc
 
 .tooltip
   display: none
@@ -46,14 +50,14 @@ th, td
   border-radius: 5px
   
 #header
+  margin-bottom: 1.5em
+  
   h1
     a
       color: #c00
-    
-  margin-bottom: 1.5em
   a
     text-decoration: none
-    color: #00c
+    color: $link_color
   ul
     margin: 0
     padding: 0
@@ -61,7 +65,7 @@ th, td
     
     li
       display: inline-block
-      padding-right: 1.5em
+      padding-right: 1em
     
 #match
   clear: right
@@ -76,7 +80,7 @@ th, td
   text-align: center
   
   a
-    color: #00c
+    color: $link_color
   ul
     margin: 0
     list-style-type: none
@@ -118,16 +122,46 @@ table.match
   td.summoner, td.champion, td.items
     text-align: left
 
+table.wide
+  td.header
+    font-weight: bold
+    
+  td.player
+    width: 100px
+  
+  td.statistic, td.spread
+    width: 100px
+    font-weight: bold
+    color: white
+    
+  td.statistic
+    background-color: #3638C8
+  
+  td.spread
+    background-color: #C13D3D
+  
+  td.advantage
+    background-color: green
+    
+  td.items
+    vertical-align: top
+    
 table.logs
   .filename
     width: 5em
   .parsed_at
+    width: 5em
   .parse_time
+    width: 3em
   .matches_found
     width: 10em
   .players_found
     width: 30em
-    
+
+.match_key, .summoner_name
+  color: $link_color
+  text-decoration: none
+  
 .qq-uploader
   position: relative
   width: 100%
@@ -179,9 +213,6 @@ table.logs
   width: 15px
   height: 15px
   vertical-align: text-bottom
-
-.qq-upload-size, .qq-upload-cancel
-
 
 .qq-upload-failed-text
   display: none

@@ -1,7 +1,7 @@
 $(document).ready(function() {
   var uploader = new qq.FileUploader({
     element: document.getElementById('file-uploader'),
-    template: '<div class="qq-uploader"><div class="qq-upload-drop-area"><span>Drop files here to upload</span></div><div class="qq-upload-button">Upload one or more files</div><ul class="qq-upload-list"></ul></div>',
+    template: '<div class="qq-uploader"><div class="qq-upload-drop-area"><span>Drop files here to upload</span></div><div class="qq-upload-button">Select one or more files</div><ul class="qq-upload-list"></ul></div>',
     action: '/upload',
     allowedExtensions: ['log'],
     onComplete: function(id, fileName, responseJSON) {

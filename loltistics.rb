@@ -61,6 +61,7 @@ class Loltistics < Sinatra::Base
           end
     
           # Add matches to the Player
+          existing_player['matches'] ||= []
           existing_player['matches'] += player[:matches]
           existing_player['matches'].uniq!
       

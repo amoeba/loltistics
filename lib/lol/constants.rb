@@ -113,7 +113,7 @@ module LOL
     'Yeti' => 'Nunu',
     'DarkChampion' => 'Tryndamere',
     'Bowmaster' => 'Ashe',
-    'Chronokeeper' => 'Blitzcrank',
+    'Chronokeeper' => 'Zilean',
     'Judicator' => 'Kayle',
     'GemKnight' => 'Taric',
     'Jester' => 'Shaco',

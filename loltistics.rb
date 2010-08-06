@@ -6,9 +6,6 @@ require 'json'
 require 'pony'
 
 require './lib/lol/lol'
-
-ENV['GMAIL_USERNAME'] = 'petridish'
-ENV['GMAIL_PASSWORD'] = 'r2LGtOJ2Zk'
   
 class Loltistics < Sinatra::Base
   set :haml, {:format => :html5 }

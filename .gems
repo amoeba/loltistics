@@ -2,3 +2,4 @@ sinatra
 mongo
 haml
 pony
+bson_ext

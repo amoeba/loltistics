@@ -50,8 +50,7 @@ class Loltistics < Sinatra::Base
     def process_uploaded_file(filename, content)
       time_started = Time.now
       result = LOL.parse_file(content)
-      time_to_parse = Time.now - time_started
-  
+      
       result[:matches].each do |match_key, match|
         @@matches_collection.update({ 'id' => match[:id] }, match, { :upsert => true })
       end
@@ -76,7 +75,9 @@ class Loltistics < Sinatra::Base
     
       matches_found = result[:matches].keys
       players_found = result[:players].collect { |name, player| "#{player[:locale]}-#{name}" }
-    
+      
+      time_to_parse = Time.now - time_started
+      
       @@logs_collection.insert({
         :filename => filename,
         :parsed_at => time_started,

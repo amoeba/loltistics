@@ -1,50 +1,73 @@
 $(function(){
   var createEloChart = function(ele) {
-    var chart = $(ele).children(".chart")[0]
-    
-    // Grab the data
-    var labels = []
-      , data = [];
-  
-    $(ele).children("table").children("tbody").children("tr").each(function () {
-      var cells = $(this).children("td")
-        , label = $(cells[0]).html()
-        , datum = $(cells[1]).html()
-      
-      labels.push(label)
-      data.push(datum)
-    });
+    // Data
+    var data = [];
 
-    console.log(labels, data);
-    
-    var width = 200
-      , height = 100
-      , r = Raphael($(ele).children(".chart")[0], width, height)
-      , txt = { font: "10px Sans-serif", fill: "#000" }
-      , ymin = 0
-      , ymax = 3000
-      , topgutter = 0
-      , bottomgutter = 0
-      , leftgutter = 0
-      , colorhue = .6 || Math.random()
-      , color = "hsb(" + [colorhue, .5, 1] + ")"
-    
-    r.rect(leftgutter, topgutter, width - leftgutter, height - topgutter - bottomgutter)
-    
-    //r.text(leftgutter - 15, topgutter , "3000")
-    //r.text(leftgutter - 15, height - bottomgutter - 2, "0")
-    
-    for(var i = 0, ii = data.length; i < ii; i++) {
-      var x = leftgutter + Math.round(((width - leftgutter * 2) / (data.length + 1)) * (i))
-        , y = Math.round(topgutter + (height - topgutter) * ( data[i] / ymax))
+    $(ele).find("tbody > tr").each(function() {
+      var cells = $(this).children("td");
+      var label = parseInt($(cells[0]).html());
+      var datum = parseInt($(cells[1]).html());
       
-      r.circle(x, y, 5).attr({fill: color, stroke: "#fff"})
-      //r.text(x, y - 15, data[i]).attr(txt)
+      data.push([label, datum]);
+    });
     
+    if(data.length == 0) { return; }
+    
+    
+      
+    function showTooltip(x, y, contents) {
+      $("#tooltip").css({top: y, left: x}).html(contents).show();
     }
+    
+    var previousIndex = null;
+    $($(ele).children(".chart")[0]).bind("plothover", function (event, pos, item) { 
+      if (item) {
+        if (previousIndex != item.dataIndex) {
+          previousIndex = item.dataIndex;
+          $("#tooltip").hide()
+          showTooltip(item.pageX, item.pageY, 
+            item.datapoint[1].toString() + ' ELO @ ' + new Date(item.datapoint[0]).toUTCString())
+        }
+      } else {
+        $("#tooltip").hide();
+        previousIndex = null;            
+      }
+    });
+    
+
+    
+    // Chart
+    var options = {
+        series: { 
+          points: { show: true },
+          lines: { show: true}
+        },
+        grid: {
+          hoverable: true
+        },
+        xaxis: { 
+          mode: "time",
+          timeformat: "%m/%d",
+          minTickSize: [1, "day"]
+        }
+    };
+
+    var plot = $.plot($(ele).children(".chart")[0], [data], options) 
   }
   
-  //$(".history").each(function() {
-  //  createEloChart(this);
-  //});
+  // Tooltip
+    $('<div id="tooltip"></div>').css({
+        position: 'absolute',
+        display: 'none',
+        top: 0,
+        left: 0,
+        border: '1px solid #fdd',
+        padding: '2px',
+        'font-size': '12px',
+        'background-color': '#fee',
+        opacity: 0.80
+      }).appendTo('body');
+  $(".history").each(function() {
+    createEloChart(this);
+  });
 });

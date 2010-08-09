@@ -55,8 +55,6 @@
         - else
           No record
 
-#graph{:style => "width: 200px; height: 100px;"}
-
 #elo_history
   %h3 ELO History
 
@@ -71,7 +69,7 @@
       %tbody
         - @normal_matches.each do |key, match|
           %tr
-            %td= (match['time_started'][0..9].to_i)
+            %td= (match['time_started'].to_i)
             %td= match['elo']
         
   .history
@@ -116,5 +114,5 @@
   - else
     This player has no matches
     
-%script{:type => 'text/javascript', :src => '/js/raphael-min.js'}
+%script{:type => 'text/javascript', :src => '/js/jquery.flot.min.js'}
 %script{:type => 'text/javascript', :src => '/js/player.js'}  

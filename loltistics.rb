@@ -67,7 +67,8 @@ class Loltistics < Sinatra::Base
     
           # Add matches to the Player
           existing_player['matches'].merge!(player[:matches])
-      
+          existing_player['matches'] = existing_player['matches'].sort_by { |k, m| m['time_started'] }
+          
           @@players_collection.save(existing_player)
         else
           @@players_collection.insert(player)
@@ -144,6 +145,9 @@ class Loltistics < Sinatra::Base
     raise PlayerNotFound if @player.nil?
     
     if @player['matches']
+      
+      @player['matches'] = @player['matches'].sort_by { |k, m| m['time_started'] }.reverse!
+      
       @normal_matches = @player['matches'].select { |k, m| m['queue_type'] =~ /NORMAL/}
       @premade_3v3_matches = @player['matches'].select { |k, m| m['queue_type'] =~ /RANKED_PREMADE_3v3/}
       @solo_5v5_matches = @player['matches'].select { |k, m| m['queue_type'] =~ /RANKED_SOLO_5v5/}

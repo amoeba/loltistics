@@ -1,14 +1,14 @@
 %h2 Matches
 
 #matches
-  .matchbox
+  .type
     %h3 Normal
     %ul
       - @matches_normal.each do |match|
         %li
           %a{:href => "/matches/#{match['id']}"}= match['id']   
           
-  .matchbox
+  .type
     %h3 Ranked Premade 3v3
     %ul
       - @matches_premade_3v3.each do |match|
@@ -16,14 +16,14 @@
           %a{:href => "/matches/#{match['id']}"}= match['id']
 
     
-  .matchbox
+  .type
     %h3 Ranked Solo 5v5
     %ul
       - @matches_solo_5v5.each do |match|
         %li
           %a{:href => "/matches/#{match['id']}"}= match['id']
 
-  .matchbox
+  .type
     %h3 Ranked Premade 5v5
     %ul
       - @matches_premade_5v5.each do |match|

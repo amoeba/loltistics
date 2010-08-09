@@ -25,6 +25,11 @@ class Loltistics < Sinatra::Base
     @@matches_collection = db.collection('matches')
     @@players_collection = db.collection('players')
     @@logs_collection = db.collection('logs')
+    
+    # Clean
+    #@@matches_collection.remove
+    #@@players_collection.remove
+    #@@logs_collection.remove
   end
 
   # Error Pages
@@ -42,7 +47,7 @@ class Loltistics < Sinatra::Base
 
   
   # Helpers
-  
+
   helpers do
     def process_uploaded_file(filename, content)
       time_started = Time.now
@@ -61,9 +66,7 @@ class Loltistics < Sinatra::Base
           end
     
           # Add matches to the Player
-          existing_player['matches'] ||= []
-          existing_player['matches'] += player[:matches]
-          existing_player['matches'].uniq!
+          existing_player['matches'].merge!(player[:matches])
       
           @@players_collection.save(existing_player)
         else
@@ -88,6 +91,10 @@ class Loltistics < Sinatra::Base
         :matches => matches_found,
         :players => players_found
       }
+    end
+    
+    def pretty_queue_type(type)
+      type.split('_').each(&:capitalize!).join(' ')
     end
   end
   
@@ -135,7 +142,14 @@ class Loltistics < Sinatra::Base
   get %r{/players/([EUS]{2})-(.+)} do |locale, name|
     @player = @@players_collection.find_one({'locale' => locale, 'summoner_name' => name})
     raise PlayerNotFound if @player.nil?
-
+    
+    if @player['matches']
+      @normal_matches = @player['matches'].select { |k, m| m['queue_type'] =~ /NORMAL/}
+      @premade_3v3_matches = @player['matches'].select { |k, m| m['queue_type'] =~ /RANKED_PREMADE_3v3/}
+      @solo_5v5_matches = @player['matches'].select { |k, m| m['queue_type'] =~ /RANKED_SOLO_5v5/}
+      @premade_5v5_matches = @player['matches'].select { |k, m| m['queue_type'] =~ /RANKED_PREMADE_5v5/}
+    end
+    
     haml :player
   end
 

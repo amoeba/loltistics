@@ -11,8 +11,8 @@
   %tbody
   - @logs.each do |log|
     %tr
-      %td= log['filename']
-      %td= log['parsed_at']
-      %td= log['parse_time']
-      %td= log['matches_found'].collect { |m| "<a href=\"/matches/#{m}\">#{m}</a>" }.join(', ')
-      %td= log['players_found'].collect { |p| "<a href=\"/players/#{p}\">#{p}</a>" }.join(', ')
+      %td.filename= log['filename']
+      %td.parsed_at= log['parsed_at']
+      %td.parse_time= log['parse_time']
+      %td.matches_found= log['matches_found'].collect { |m| "<a href=\"/matches/#{m}\">#{m}</a>" }.join(', ')
+      %td.players_found= log['players_found'].collect { |p| "<a href=\"/players/#{p}\">#{p}</a>" }.join(', ')

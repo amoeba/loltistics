@@ -6,6 +6,7 @@
     %script{:type => 'text/javascript', :src => 'http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js'}
   %body
     #header
+    
       %h1 
         %a{:href => '/'} LoLtistics
       #navigation
@@ -17,8 +18,12 @@
           %li
             %a{:href => '/upload'} Upload
           %li
-            %a{:href => '/logs'} Logs
+            %a{:href => '/logs'} Parser Log
           %li
-            %a{:href => '/feedback'} Send Feedback
+            %a{:href => '/feedback'} Feedback
+      #upload
+        %a{:href => '/upload'} Upload Your Logfiles
     #content= yield
     #footer
+    
+    

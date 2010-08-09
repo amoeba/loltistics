@@ -10,6 +10,8 @@ body
     family: Sans-serif
     size: 14px
   padding: 1.5em
+  width: 940px
+  margin: 0 auto
 
 p
   margin-top: 1.5em
@@ -37,9 +39,15 @@ th, td
 td
   border-top: 1px solid #ccc
 
+.winning
+  color: green
+
+.losing
+  color: red
+
 .tooltip
   display: none
-  background: black
+  background: #000
   font-size: 0.75em
   width: 15em
   color: white
@@ -49,61 +57,146 @@ td
   -webkit-border-radius: 5px
   border-radius: 5px
   
+.description
+  margin-bottom: 1em
+
+.match_key, .summoner_name
+  display: inline-block
+  -moz-border-radius: 5px
+  -webkit-border-radius: 5px
+  border-radius: 5px
+  padding: 5px 10px
+  font-size: 2em
+  vertical-align: baseline
+  
+  a
+    text-decoration: none
+    color: white
+    
+.match_key
+  background-color: #C5241F
+  border: 1px solid #E02823
+  
+.summoner_name
+  background-color: #141A9F
+  border: 1px solid #212EF9
+  
 #header
+  width: 100%
+  overflow: hidden
   margin-bottom: 1.5em
   
+  h1, #navigation
+    float: left
+    
   h1
     a
       color: #c00
   a
     text-decoration: none
     color: $link_color
+    
   ul
-    margin: 0
+    height: 2em
+    margin: 1em 0 0 1em
     padding: 0
     list-style-type: none
     
     li
-      display: inline-block
+      display: inline
       padding-right: 1em
+  
+  #upload
+    float: right
+    height: 2em
+    padding: 0 0.5em
+
+    font-weight: bold
     
-#match
-  clear: right
-
-.matchbox
-  display: block
-  float: left
-  margin: 1.5em
-  padding: 1.5em
-  width: 12em
-  border: 1px solid #CCC
-  text-align: center
-  
-  a
-    color: $link_color
-  ul
-    margin: 0
-    list-style-type: none
-
-#record
+    
+    a
+      color: #c00
+      
+#player_badge
+  overflow: hidden
   width: 100%
+  margin-bottom: 1em
   
-.record
-  display: block
-  float: left
-  margin: 1.5em
-  padding: 1.5em
-  width: 10em
-  text-align: center
-  border: 1px solid #CCC
+  .icon
+    float: left
+    width: 64px
+    height: 64px
+        
+    img
+      float: left
+      
+  .summoner
+    margin-left: 10px
+    float: left
+    height: 64px
+      
+#player_record
+  overflow: hidden
+  width: 100%
+  margin-bottom: 1em
   
+  .record
+    float: left
+    width: 200px
+    text-align: center
+    
+#player_elo
+  overflow: hidden
+  width: 100%
+  margin-bottom: 1em
+  
+  .elo
+    float: left
+    width: 200px
+    text-align: center
+    
+    .type, .value
+      display: block
+      
+    .value
+      font-size: 1.5em
+      font-weight: bold
+      
+#elo_history
+  width: 100%
+  overflow: hidden
+  margin-bottom: 1em
+  
+  .history
+    float: left
+    width: 200px
+    text-align: center
+    
+    ul
+      list-style-type: none
+      margin: 0
+      padding: 0
+    
 #matches
-  clear: left
-
-
+  width: 100%
+  overflow: hidden
+  margin-bottom: 1em
+  
+  .type
+    width: 200px
+    float: left
+    text-align: center
+    
+    ul
+      list-style-type: none
+      margin: 0
+      padding: 0
+    
 table.match  
   .summoner
     width: 10em
+    a
+      text-decoration: none
   .champion
     width: 10em
   .level
@@ -122,6 +215,9 @@ table.match
   td.summoner, td.champion, td.items
     text-align: left
 
+table.matches
+  width: 100%
+  
 table.wide
   td.header
     font-weight: bold
@@ -150,17 +246,16 @@ table.logs
   .filename
     width: 5em
   .parsed_at
-    width: 5em
+    width: 20em
   .parse_time
-    width: 3em
+    width: 10em
   .matches_found
     width: 10em
   .players_found
     width: 30em
-
-.match_key, .summoner_name
-  color: $link_color
-  text-decoration: none
+  
+  td
+    vertical-align: top
   
 .qq-uploader
   position: relative

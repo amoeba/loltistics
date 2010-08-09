@@ -1,51 +1,114 @@
-%h1
-  %a.summoner_name{:href => "/players/#{@player['locale']}-#{@player['summoner_name']}"}= "#{@player['locale']}-#{@player['summoner_name']}"
+#player_badge
+  .icon
+    %img{:src => "/images/summoner_icons/#{@player['profile_icon_id']}.jpg", :alt => "Summoner Icon", :width => '64', :height => '64'}
+  .summoner
+    %h2.summoner_name
+      %a{:href => "/players/#{@player['locale']}-#{@player['summoner_name']}"}= "#{@player['locale']}-#{@player['summoner_name']}"
+    .level
+      = "Level #{@player['level']}"
 
-%img{:src => "/images/summoner_icons/#{@player['profile_icon_id']}.jpg", :alt => "Summoner Icon", :width => '62', :height => '64'}
-
-%ul
-  %li= "Level: #{@player['level']}"
-  %li= "Server: #{@player['locale']}"
-
-#record
-  %h3 Record
-- if @player['record']
-  .record
-    - if @player['record']['NORMAL']
-      %h4 Normal
-      .wll= "#{@player['record']['NORMAL']['wins']}/#{@player['record']['NORMAL']['losses']}/#{@player['record']['NORMAL']['leaves']}"
-      .elo= "ELO: #{@player['record']['NORMAL']['elo']}"
-    - else
-      No record
-  .record
-    %h4 Premade 3v3
-    - if @player['record']['RANKED_PREMADE_3v3']
-      .wll= "#{@player['record']['RANKED_PREMADE_3v3']['wins']}/#{@player['record']['RANKED_PREMADE_3v3']['losses']}/#{@player['record']['RANKED_PREMADE_3v3']['leaves']}"
-      .elo= "ELO: #{@player['record']['RANKED_PREMADE_3v3']['elo']}"
-    - else
-      No record
-  .record
-    %h4 Solo 5v5
-    - if @player['record']['RANKED_SOLO_5v5']
-      .wll= "#{@player['record']['RANKED_SOLO_5v5']['wins']}/#{@player['record']['RANKED_SOLO_5v5']['losses']}/#{@player['record']['RANKED_SOLO_5v5']['leaves']}"
-      .elo= "ELO: #{@player['record']['RANKED_SOLO_5v5']['elo']}"
-    - else
-      No record
-  .record
-    %h4 Premade 5v5
-    - if @player['record']['RANKED_PREMADE_5v5']
-      .wll= "#{@player['record']['RANKED_PREMADE_5v5']['wins']}/#{@player['record']['RANKED_PREMADE_5v5']['losses']}/#{@player['record']['RANKED_PREMADE_5v5']['leaves']}"
-      .elo= "ELO: #{@player['record']['RANKED_PREMADE_5v5']['elo']}"
-    - else
-      No record
+%h3 Record
+#player_record
+  .record.unranked
+    %h4 Unranked
+    30/20/1
+  .record.ranked
+    %h4 Ranked
+    28/2/0
+    
+%h3 Current ELO
+#player_elo
   
+  - if @player['record']
+    .elo
+      %span.type Normal
+      %span.value
+        - if @player['elo']['NORMAL']
+          = "#{@player['elo']['NORMAL']}"
+        - else
+          No record
+    .elo
+      %span.type  Premade 3v3
+      %span.value
+        - if @player['elo']['RANKED_PREMADE_3v3']
+          = "#{@player['elo']['RANKED_PREMADE_3v3']}"
+        - else
+          No record
+    .elo
+      %span.type  Solo 5v5
+      %span.value
+        - if @player['elo']['RANKED_SOLO_5v5']
+          "#{@player['elo']['RANKED_SOLO_5v5']}"
+        - else
+          No record
+    .elo
+      %span.type Premade 5v5
+      %span.value
+        - if @player['elo']['RANKED_PREMADE_5v5']
+          = "#{@player['elo']['RANKED_PREMADE_5v5']}"
+        - else
+          No record
+
+#graph{:style => "width: 200px; height: 100px;"}
+
+#elo_history
+  %h3 ELO History
+
+  .history
+    .type Normal
+    .chart
+    %table
+      %thead
+        %tr
+          %th Date
+          %th ELO
+      %tbody
+        - @normal_matches.each do |key, match|
+          %tr
+            %td= (match['time_started'][0..9].to_i)
+            %td= match['elo']
+        
+  .history
+    .type Premade 3v3
+    %ul
+      - @premade_3v3_matches.each do |key, match|
+        %li= match['elo']      
+  .history
+    .type Solo 5v5
+    %ul
+      - @solo_5v5_matches.each do |key, match|
+        %li= match['elo']   
+  .history
+    .type 5v5 Premade
+    %ul
+      - @premade_5v5_matches.each do |key, match|
+        %li= match['elo']   
+
 #matches
   %h3 Matches
   - if @player['matches']
-    %ul
-      - @player['matches'].each do |match|
-        %li
-          %a{:href => "/matches/#{match}"}= match
+    %table.matches
+      %thead
+        %tr
+          %th Match
+          %th Ranked?
+          %th Started At
+          %th Length
+          %th Winner?
+          %th Champion
+      %tbody
+        - @player['matches'].each do |key, match|
+          %tr
+            %td
+              %a{:href => "/matches/#{key}"}= key
+            %td= match['ranked'] =~ /ranked/ ? 'Ranked' : 'Normal'
+            %td= Time.at(match['time_started'][0..9].to_i) - match['game_length'].to_i
+            %td= "#{match['game_length'].to_i / 60} min."
+            %td{:class => match['winner'] ? 'winning' : 'losing'}= match['winner'] ? 'Winner' : 'Loser'
+            %td= LOL.champion_name(match['skin_name'])
+            
   - else
     This player has no matches
     
+%script{:type => 'text/javascript', :src => '/js/raphael-min.js'}
+%script{:type => 'text/javascript', :src => '/js/player.js'}  

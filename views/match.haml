@@ -1,20 +1,12 @@
-%h1
-  %a.match_key{:href => "/matches/#{@match['id']}"}= @match['id']
+%h2.match_key
+  %a{:href => "/matches/#{@match['id']}"}= @match['id']
+%h2.description= "A #{pretty_queue_type(@match['queue_type'])} game on #{LOL.map_name(@match['map_id'])} lasting #{@match['game_length'].to_i / 60} minutes"
 
-%ul
-  %li= "Map: #{LOL.map_name(@match['map_id'])}"
-  %li
-    %img{:src => "/images/maps/#{@match['map_id']}.png", :alt => LOL.map_name(@match['map_id'])}
-  %li= "Created: #{@match['creation_time']}"
-  %li= "Queue Type: #{@match['queue_type']}"
-  %li= "Game Type: #{@match['game_type']}"
-  %li= "Ranked?: #{@match['ranked']}"
-  %li= "Game Length: #{@match['game_length'].to_i / 60} minutes"
-
-%h2 Winning Team
+-#TODO Expected Outcome = 1 / (1 + 10^((Enemy Rating - Your Rating)/400))
+%h3.winning Winning Team
 = haml(:_team, :layout => false, :locals => { :team => @winning_team })
 
-%h2 Losing Team
+%h3.losing Losing Team
 = haml(:_team, :layout => false, :locals => { :team => @losing_team })
 
 %script{:type => 'text/javascript', :src => '/js/jquery.tools.min.js'}

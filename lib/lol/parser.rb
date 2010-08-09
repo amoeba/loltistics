@@ -127,8 +127,9 @@ module LOL
             :level => player['level'],
             :profile_icon_id => player['profileIconId'],
             :last_game_timestamp => eog['timestamp'],
-            :matches => [],
-            :record => {}
+            :matches => {},
+            :record => {},
+            :elo => {}
           }
           
           match_player = {
@@ -148,8 +149,13 @@ module LOL
           end
           
           existing_player = @players[player['summonerName']]
-          existing_matches = @players[player['summonerName']][:matches] if existing_player
-          existing_record = @players[player['summonerName']][:record] if existing_player
+          
+          if existing_player
+            existing_matches = @players[player['summonerName']][:matches]
+            existing_elo = @players[player['summonerName']][:elo]
+            existing_record = @players[player['summonerName']][:record]
+            existing_matches = @players[player['summonerName']][:matches]
+          end
           
           if existing_player.nil? or existing_player[:last_game_timestamp].to_i < new_player[:last_game_timestamp].to_i
             @players[player['summonerName']] = new_player
@@ -158,15 +164,23 @@ module LOL
             
             # Older log files don't have a queueType in their EOGStats so we must have a fallback
             record_type = match_data[:queue_type] or 'NORMAL'
+            match_type = eog['body']['ranked'] =~ /true/ ? :ranked : :normal
             
             @players[player['summonerName']][:record] = existing_record if existing_record
-            @players[player['summonerName']][:record].merge!({
-                record_type => {
+            @players[player['summonerName']][:record].merge!(
+              {
+                match_type => {
                   :wins => player['wins'],
                   :losses => player['losses'],
                   :leaves => player['leaves'],
-                  :elo => player['elo']
                 }
+              }
+            )
+            
+            @players[player['summonerName']][:elo] = existing_elo if existing_elo
+            @players[player['summonerName']][:elo].merge!(
+              {
+                record_type => player['elo']
               }
             )
           end
@@ -175,7 +189,21 @@ module LOL
           
           # Only add Record and Matches for non-PRACTICE_GAMES
           if match_data[:game_type] != "PRACTICE_GAME"
-            @players[player['summonerName']][:matches].push(match_key)
+            is_winner = player['eloChange'].to_i > 0
+            
+            @players[player['summonerName']][:matches].merge!(
+              {
+                match_key => {
+                  :winner => is_winner,
+                  :skin_name => player['skinName'],
+                  :game_length => eog['body']['gameLength'],
+                  :time_started => eog['timestamp'],
+                  :ranked => eog['body']['ranked'],
+                  :elo => player['elo'],
+                  :queue_type => record_type
+                }
+              }  
+            )
           end
     
           match_data[:players].push(match_player)

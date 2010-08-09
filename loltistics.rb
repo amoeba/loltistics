@@ -67,7 +67,6 @@ class Loltistics < Sinatra::Base
     
           # Add matches to the Player
           existing_player['matches'].merge!(player[:matches])
-          existing_player['matches'] = existing_player['matches'].sort_by { |k, m| m['time_started'] }
           
           @@players_collection.save(existing_player)
         else

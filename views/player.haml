@@ -10,11 +10,17 @@
 %h3 Record
 #player_record
   .record.unranked
-    %h4 Unranked
-    30/20/1
+    %h4 Normal
+    - if @player['record']['normal']
+      = "#{@player['record']['normal']['wins']}/#{@player['record']['normal']['losses']}/#{@player['record']['normal']['leaves']}"
+    - else
+      No record
   .record.ranked
     %h4 Ranked
-    28/2/0
+    - if @player['record']['ranked']
+      = "#{@player['record']['ranked']['wins']}/#{@player['record']['ranked']['losses']}/#{@player['record']['ranked']['leaves']}"
+    - else
+      No record
     
 %h3 Current ELO
 #player_elo

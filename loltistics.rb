@@ -51,12 +51,17 @@ class Loltistics < Sinatra::Base
   helpers do
     def process_uploaded_file(filename, content)
       time_started = Time.now
-      result = LOL.parse_file(content)
+      result = LOL::XinZhaoParser.parse_file(content)
+      
+      require 'pp'
+      pp result
       
       result[:matches].each do |match_key, match|
         @@matches_collection.update({ 'id' => match[:id] }, match, { :upsert => true })
       end
-  
+      
+      
+      
       result[:players].each do |name, player|
         existing_player = @@players_collection.find_one({:summoner_name => name})
 

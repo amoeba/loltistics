@@ -75,7 +75,7 @@ class Loltistics < Sinatra::Base
       end
     
       matches_found = result[:matches].keys
-      players_found = result[:players].collect { |name, player| "#{player[:locale]}-#{name}" }
+      players_found = result[:players].collect { |name, player| "#{player[:server]}-#{name}" }
       
       time_to_parse = Time.now - time_started
       
@@ -139,8 +139,8 @@ class Loltistics < Sinatra::Base
     haml :players
   end
 
-  get %r{/players/([EUS]{2})-(.+)} do |locale, name|
-    @player = @@players_collection.find_one({'locale' => locale, 'summoner_name' => name})
+  get %r{/players/([EUS]{2})-(.+)} do |server, name|
+    @player = @@players_collection.find_one({'server' => server, 'summoner_name' => name})
     raise PlayerNotFound if @player.nil?
     
     if @player['matches']

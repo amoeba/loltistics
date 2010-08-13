@@ -5,12 +5,17 @@ require 'sass'
 require 'json'
 require 'pony'
 
+require 'rack-flash'
+
 require './lib/lol/lol'
   
 class Loltistics < Sinatra::Base
   set :haml, {:format => :html5 }
   set :static, :true
   set :public, 'public'
+  
+  enable :sessions
+  use Rack::Flash
   
   configure do
     if ENV['MONGOHQ_URL']
@@ -111,6 +116,7 @@ class Loltistics < Sinatra::Base
   end
   
   get '/' do
+    flash[:notice] = "The uploader is down due to some changes to to the logfiles that came with the Galio patch."
     haml :index
   end
 
@@ -196,7 +202,7 @@ class Loltistics < Sinatra::Base
   end
 
   get '/upload' do
-    haml :upload
+    haml '%h3 Uploading has been disabled due to changes in log files introduced by the Galio patch'
   end
 
   post '/upload' do

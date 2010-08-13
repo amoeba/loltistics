@@ -23,7 +23,10 @@
             %a{:href => '/feedback'} Feedback
       #upload
         %a{:href => '/upload'} Upload Your Logfiles
-    #content= yield
+    #content
+      - if flash.has?(:notice)
+        .notice= flash[:notice]
+      = yield
     #footer
     
     

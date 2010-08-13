@@ -1,0 +1,34 @@
+GEM
+  specs:
+    activesupport (2.3.8)
+    bson (1.0.4)
+    bson_ext (1.0.4)
+    haml (3.0.13)
+    mail (2.2.5)
+      activesupport (>= 2.3.6)
+      mime-types
+      treetop (>= 1.4.5)
+    mime-types (1.16)
+    mongo (1.0.5)
+      bson (>= 1.0.4)
+    polyglot (0.3.1)
+    pony (1.0)
+      mail (> 2.0)
+    rack (1.2.1)
+    rack-flash (0.1.1)
+      rack
+    sinatra (1.0)
+      rack (>= 1.0)
+    treetop (1.4.8)
+      polyglot (>= 0.3.1)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  bson_ext
+  haml
+  mongo
+  pony
+  rack-flash
+  sinatra

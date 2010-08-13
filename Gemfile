@@ -1,3 +1,5 @@
+source :gemcutter
+
 gem 'sinatra'
 gem 'mongo'
 gem 'haml'

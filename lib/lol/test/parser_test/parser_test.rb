@@ -1,8 +1,14 @@
 require '../../lol'
 require 'pp'
 
-#File.open('LolClient.20100722.220811.log') do |f|
-File.open('failing_log.log') do |f| 
-  contents = LOL::XinZhaoParser.parse_file(f.read())
-  pp contents
+files = []
+files << "LolClient.20100815.155553.log"
+files << "LolClient.20100816.193705.log"
+
+files.each do |filename|
+  File.open(filename) do |f| 
+    contents = LOL::XinZhaoParser.parse_file(f.read())
+  
+    pp contents[:ip]
+  end
 end

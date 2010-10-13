@@ -79,7 +79,10 @@ module LOL
       @server, @matches, @players = nil, {}, {}
       match, match_key = nil, ''
       items, finding_items = [], false
-
+      
+      #Debugging IP gain
+      @ip_gain = {}
+      
       @messages.each do |message|
         # Server
         if @server.nil? and message.match 'loadProperties: host = '
@@ -106,6 +109,11 @@ module LOL
         if message.match 'EndOfGameStats\)#1'
         
           eog = parse(message)
+          
+          #Debugging IP
+          @ip_gain.merge!({match_key => eog['body']['basePoints']})
+          #END Debugging IP
+          
           match_key = @server + eog['body']['gameId']
         
           # Older matches don't have this. Default to NORMAL
@@ -119,8 +127,11 @@ module LOL
             :players => []
           }
         
-          # The player that sumbits the log is on team 100
           # To find out which team won we need to look at ELO change
+          # 2010/08/17: This method doesn't work any longer
+          # team 100 is blue
+          # team 200 is purple
+          # teamPlayerParticipantStats always contains the uploader
           all_players = eog['body']['teamPlayerParticipantStats']['list']['source'] + eog['body']['otherTeamPlayerParticipantStats']['list']['source']
         
           all_players.each do |player|
@@ -138,6 +149,7 @@ module LOL
             match_player = {
               :server => @server,
               :summoner_name => player['summonerName'],
+              :team_id => player['teamId'],
               :level => player['level'],
               :elo => player['elo'],
               :elo_change => player['eloChange'],
@@ -255,7 +267,8 @@ module LOL
     
       {
         :matches => @matches,
-        :players => @players
+        :players => @players,
+        :ip => @ip_gain
       }
     end
   end

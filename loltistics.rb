@@ -209,7 +209,7 @@ class Loltistics < Sinatra::Base
     filename = params['qqfile'] or params['file'][:filename]
     file = params['file'] ? params[:file][:tempfile].read : env['rack.input'].read
   
-    @result = process_uploaded_file(filename, file, true)
+    @result = process_uploaded_file(filename, file, false)
     
     if params['qqfile']
       content_type :json

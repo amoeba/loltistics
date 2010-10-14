@@ -32,9 +32,9 @@ class Loltistics < Sinatra::Base
     @@logs_collection = db.collection('logs')
     
     # Clean
-    #@@matches_collection.remove
-    #@@players_collection.remove
-    #@@logs_collection.remove
+    @@matches_collection.remove
+    @@players_collection.remove
+    @@logs_collection.remove
   end
 
   # Error Pages
@@ -54,36 +54,36 @@ class Loltistics < Sinatra::Base
   # Helpers
 
   helpers do
-    def process_uploaded_file(filename, content)
+    def process_uploaded_file(filename, content, save)
       time_started = Time.now
       result = LOL::XinZhaoParser.parse_file(content)
       
       require 'pp'
       pp result
       
-      result[:matches].each do |match_key, match|
-        @@matches_collection.update({ 'id' => match[:id] }, match, { :upsert => true })
-      end
-      
-      
-      
-      result[:players].each do |name, player|
-        existing_player = @@players_collection.find_one({:summoner_name => name})
+      if save
+        result[:matches].each do |match_key, match|
+          @@matches_collection.update({ 'id' => match[:id] }, match, { :upsert => true })
+        end
+       
+        result[:players].each do |name, player|
+          existing_player = @@players_collection.find_one({:summoner_name => name})
 
-        if existing_player
-          if existing_player['last_game_timestamp'].to_i <= player[:last_game_timestamp].to_i
-            existing_player.merge!(player)
-          end
+          if existing_player
+            if existing_player['last_game_timestamp'].to_i <= player[:last_game_timestamp].to_i
+              existing_player.merge!(player)
+            end
     
-          # Add matches to the Player
-          existing_player['matches'].merge!(player[:matches])
+            # Add matches to the Player
+            existing_player['matches'].merge!(player[:matches])
           
-          @@players_collection.save(existing_player)
-        else
-          @@players_collection.insert(player)
+            @@players_collection.save(existing_player)
+          else
+            @@players_collection.insert(player)
+          end
         end
       end
-    
+      
       matches_found = result[:matches].keys
       players_found = result[:players].collect { |name, player| "#{player[:server]}-#{name}" }
       
@@ -202,14 +202,14 @@ class Loltistics < Sinatra::Base
   end
 
   get '/upload' do
-    haml '%h3 Uploading has been disabled due to changes in log files introduced by the Galio patch'
+    haml :upload
   end
 
   post '/upload' do
     filename = params['qqfile'] or params['file'][:filename]
     file = params['file'] ? params[:file][:tempfile].read : env['rack.input'].read
   
-    @result = process_uploaded_file(filename, file)
+    @result = process_uploaded_file(filename, file, true)
     
     if params['qqfile']
       content_type :json

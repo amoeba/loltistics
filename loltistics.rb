@@ -120,16 +120,8 @@ class Loltistics < Sinatra::Base
     haml :index
   end
 
-  get '/matches' do
-    #@matches_normal = @matches.select { |m| m['queue_type'] == 'NORMAL'}
-    #@matches_premade_3v3 = @matches.select { |m| m['queue_type'] == 'RANKED_PREMADE_3v3'}
-    #@matches_solo_5v5 = @matches.select { |m| m['queue_type'] == 'RANKED_SOLO_5v5'}
-    #@matches_premade_5v5 = @matches.select { |m| m['queue_type'] == 'RANKED_PREMADE_5v5'}
-    
-    @matches_normal = @@matches_collection.find({:queue_type => 'NORMAL'}).limit(10)
-    @matches_premade_3v3 = @@matches_collection.find({:queue_type => 'RANKED_PREMADE_3v3'}).limit(10)
-    @matches_solo_5v5 = @@matches_collection.find({:queue_type => 'RANKED_SOLO_5v5'}).limit(10)
-    @matches_premade_5v5 = @@matches_collection.find({:queue_type => 'RANKED_PREMADE_5v5'}).limit(10)
+  get '/matches' do  
+    @matches = @@matches_collection.find().limit(25)
   
     haml :matches
   end
@@ -145,8 +137,30 @@ class Loltistics < Sinatra::Base
   end
 
   get '/players' do
-    @players = @@players_collection.find().limit(50).sort([['summoner_name',1]])
-  
+    #@players = @@players_collection.find().limit(50).sort([['summoner_name',1]])
+    @players = [
+      {
+        :server => 'US',
+        :summoner_name => 'Petridish'
+      },
+      {
+        :server => 'US',
+        :summoner_name => 'Fazers'
+      },
+      {
+        :server => 'US',
+        :summoner_name => 'Lante'
+      },
+      {
+        :server => 'US',
+        :summoner_name => 'Cyniae'
+      },
+      {
+        :server => 'US',
+        :summoner_name => 'Speed0'
+      },
+      ]
+      
     haml :players
   end
 

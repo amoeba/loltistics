@@ -1,6 +1,6 @@
-%h2 First 50 Players
+%h2 Listing Players
 
 %ul
   - @players.each do |player|
     %li
-      %a{:href => "/players/#{player['server']}-#{player['summoner_name']}"}= "#{player['server']}-#{player['summoner_name']}"
+      %a{:href => "/players/#{player[:server]}-#{player[:summoner_name]}"}= "#{player[:server]}-#{player[:summoner_name]}"

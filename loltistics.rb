@@ -57,31 +57,27 @@ class Loltistics < Sinatra::Base
     def process_uploaded_file(filename, content)
       time_started = Time.now
       result = LOL::XinZhaoParser.parse_file(content)
-      
-      require 'pp'
-      pp result
-      
 
-      result[:matches].each do |match_key, match|
-        @@matches_collection.update({ 'id' => match[:id] }, match, { :upsert => true })
-      end
-     
-      result[:players].each do |name, player|
-        existing_player = @@players_collection.find_one({:summoner_name => name})
-
-        if existing_player
-          if existing_player['last_game_timestamp'].to_i <= player[:last_game_timestamp].to_i
-            existing_player.merge!(player)
-          end
-  
-          # Add matches to the Player
-          existing_player['matches'].merge!(player[:matches])
-        
-          @@players_collection.save(existing_player)
-        else
-          @@players_collection.insert(player)
-        end
-      end
+      #result[:matches].each do |match_key, match|
+      #  @@matches_collection.update({ 'id' => match[:id] }, match, { :upsert => true })
+      #end
+      #
+      #result[:players].each do |name, player|
+      #  existing_player = @@players_collection.find_one({:summoner_name => name})
+      #
+      #  if existing_player
+      #    if existing_player['last_game_timestamp'].to_i <= player[:last_game_timestamp].to_i
+      #      existing_player.merge!(player)
+      #    end
+      #
+      #    # Add matches to the Player
+      #    existing_player['matches'].merge!(player[:matches])
+      #  
+      #    @@players_collection.save(existing_player)
+      #  else
+      #    @@players_collection.insert(player)
+      #  end
+      #end
       
       matches_found = result[:matches].keys
       players_found = result[:players].collect { |name, player| "#{player[:server]}-#{name}" }

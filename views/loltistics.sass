@@ -106,17 +106,12 @@ td
       display: inline
       padding-right: 1em
   
-  #upload
-    float: right
-    height: 2em
-    padding: 0 0.5em
-
-    font-weight: bold
+#upload
+  float: right
+  
+  a
+    color: #fff
     
-    
-    a
-      color: #c00
-      
 #player_badge
   overflow: hidden
   width: 100%
@@ -266,28 +261,75 @@ table.logs
 
 .notice
   font-weight: bold
-  background-color: #f00
+  border: 1px solid #f00
   color: #fff
   padding: 1em
   margin-bottom: 1em
+
+
+.button, .qq-upload-button
+  display: inline-block
+  margin: 0.5em
+  background: #c63929
+  background: -moz-linear-gradient(0% 100% 90deg, #891100 0%, #B51700 50%, #c63929 50%, #EE432E 100%)
+  background: -webkit-gradient(linear, 0 0, 0 100%, color-stop(0, #ee432e), color-stop(1, #891100))
+  border: 1px solid #951100
+  border-radius: 5px
+  -moz-border-radius: 5px
+  -webkit-border-radius: 5px
+  box-shadow: inset 0px 0px 0px 1px rgba(255, 115, 100, 0.4), 0 1px 3px #333
+  -moz-box-shadow: inset 0px 0px 0px 1px rgba(255, 115, 100, 0.4), 0 1px 3px #333
+  -webkit-box-shadow: inset 0px 0px 0px 1px rgba(255, 115, 100, 0.4), 0 1px 3px #333
+  color: #fff
+  font-family: "helvetica neue", helvetica, arial, sans-serif
+  font-size: 1.25em
+  font-weight: bold
+  letter-spacing: 1px
+  line-height: 1em
+  padding: 0.5em 0.75em
+  text-align: center
+  text-shadow: 1px -1px 1px rgba(0, 0, 0, .8)
   
+.button:hover, .qq-upload-button:hover
+  background: #cb0500
+  background: -moz-linear-gradient(0% 100% 90deg, #a20601 0%, #cb0500 50%, #db504d 50%, #f37873 100%)
+  background: -webkit-gradient(linear, 0 0, 0 100%, color-stop(0, #f37873), color-stop(1, #a20601))
+  cursor: pointer
+
+.button:active
+  background: #b30300
+  background: -moz-linear-gradient(0% 100% 90deg, #700d00 0%, #9c1500 50%, #ad3224 50%, #d43c28 100%)
+  background: -webkit-gradient(linear, 0 0, 0 100%, color-stop(0, #d43c28), color-stop(0.5, #ad3224), color-stop(0.5, #9c1500), color-stop(1, #700d00))
+  box-shadow: inset 0px 0px 0px 1px rgba(255, 115, 100, 0.4)
+  -moz-box-shadow: inset 0px 0px 0px 1px rgba(255, 115, 100, 0.4)
+  -webkit-box-shadow: inset 0px 0px 0px 1px rgba(255, 115, 100, 0.4)
+  
+.uploader-box
+  width: 50%
+  margin: 0 auto
+  border-radius: 5px
+  -moz-border-radius: 5px
+  -webkit-border-radius: 5px
+  border: 1px solid #CCC
+  padding: 1em
+  
+  #output
+    margin: 1em 0 0 0
+    padding: 0
+    list-style-type: none
+    
+    li
+      text-align: center
+      margin-bottom: 1em
+    
 .qq-uploader
   position: relative
   width: 100%
+  text-align: center
 
 .qq-upload-button
   margin-top: 1em
-  display: inline-block
-  padding: 1em
-  text-align: center
-  background: #cc0000
-  color: #fff
-  -moz-border-radius: 5px
-  -webkit-border-radius: 5px
-  border-radius: 5px
-
-.qq-upload-button-hover
-  background: #880000
+  
 
 .qq-upload-drop-area
   position: absolute
@@ -311,9 +353,14 @@ table.logs
 .qq-upload-drop-area-active
   background: #FF7171
 
+.qq-upload-list
+  margin: 0
+  padding: 0
+  list-style-type: none
+
 .qq-upload-file, .qq-upload-spinner, .qq-upload-size, .qq-upload-cancel, .qq-upload-failed-text
   margin-right: 7px
-
+  
 .qq-upload-spinner
   display: inline-block
   background: url('/images/loading.gif')

@@ -98,7 +98,6 @@
           %th Ranked?
           %th Started At
           %th Length
-          %th Winner?
           %th Champion
       %tbody
         - @player['matches'].each do |key, match|
@@ -108,7 +107,6 @@
             %td= match['ranked'] =~ /ranked/ ? 'Ranked' : 'Normal'
             %td= Time.at(match['time_started'][0..9].to_i) - match['game_length'].to_i
             %td= "#{match['game_length'].to_i / 60} min."
-            %td{:class => match['winner'] ? 'winning' : 'losing'}= match['winner'] ? 'Winner' : 'Loser'
             %td= LOL.champion_name(match['skin_name'])
             
   - else

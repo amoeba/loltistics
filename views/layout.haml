@@ -16,13 +16,9 @@
           %li
             %a{:href => '/players'} Players
           %li
-            %a{:href => '/upload'} Upload
-          %li
-            %a{:href => '/logs'} Parser Log
-          %li
-            %a{:href => '/feedback'} Feedback
+            %a.upload{:href => '/feedback'} Feedback
       #upload
-        %a{:href => '/upload'} Upload Your Logfiles
+        %a.button{:href => '/'} Upload
     #content
       - if flash.has?(:notice)
         .notice= flash[:notice]

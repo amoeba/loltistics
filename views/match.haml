@@ -3,11 +3,11 @@
 %h2.description= "A #{pretty_queue_type(@match['queue_type'])} game on #{LOL.map_name(@match['map_id'])} lasting #{@match['game_length'].to_i / 60} minutes"
 
 -#TODO Expected Outcome = 1 / (1 + 10^((Enemy Rating - Your Rating)/400))
-%h3.winning Winning Team
-= haml(:_team, :layout => false, :locals => { :team => @winning_team })
+%h3.winning Team One
+= haml(:_team, :layout => false, :locals => { :team => @team_one })
 
-%h3.losing Losing Team
-= haml(:_team, :layout => false, :locals => { :team => @losing_team })
+%h3.losing Team Two
+= haml(:_team, :layout => false, :locals => { :team => @team_two })
 
 %script{:type => 'text/javascript', :src => '/js/jquery.tools.min.js'}
 %script{:type => 'text/javascript', :src => '/js/match.js'}

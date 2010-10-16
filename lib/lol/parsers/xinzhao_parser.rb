@@ -81,7 +81,7 @@ module LOL
       items, finding_items = [], false
       
       #Debugging IP gain
-      @ip_gain = {}
+      #@ip_gain = {}
       
       @messages.each do |message|
         # Server
@@ -111,7 +111,7 @@ module LOL
           eog = parse(message)
           
           #Debugging IP
-          @ip_gain.merge!({match_key => eog['body']['basePoints']})
+          #@ip_gain.merge!({match_key => eog['body']['basePoints']})
           #END Debugging IP
           
           match_key = @server + eog['body']['gameId']

@@ -31,10 +31,12 @@ class Loltistics < Sinatra::Base
     @@players_collection = db.collection('players')
     @@logs_collection = db.collection('logs')
     
-    # Clean
-    @@matches_collection.remove
-    @@players_collection.remove
-    @@logs_collection.remove
+    #if ENV['MONGOHQ_URL']
+    #  # Remove all records
+    #  @@matches_collection.remove
+    #  @@players_collection.remove
+    #  @@logs_collection.remove
+    #end
   end
 
   # Error Pages
@@ -58,26 +60,26 @@ class Loltistics < Sinatra::Base
       time_started = Time.now
       result = LOL::XinZhaoParser.parse_file(content)
 
-      #result[:matches].each do |match_key, match|
-      #  @@matches_collection.update({ 'id' => match[:id] }, match, { :upsert => true })
-      #end
-      #
-      #result[:players].each do |name, player|
-      #  existing_player = @@players_collection.find_one({:summoner_name => name})
-      #
-      #  if existing_player
-      #    if existing_player['last_game_timestamp'].to_i <= player[:last_game_timestamp].to_i
-      #      existing_player.merge!(player)
-      #    end
-      #
-      #    # Add matches to the Player
-      #    existing_player['matches'].merge!(player[:matches])
-      #  
-      #    @@players_collection.save(existing_player)
-      #  else
-      #    @@players_collection.insert(player)
-      #  end
-      #end
+      result[:matches].each do |match_key, match|
+        @@matches_collection.update({ 'id' => match[:id] }, match, { :upsert => true })
+      end
+      
+      result[:players].each do |name, player|
+        existing_player = @@players_collection.find_one({:summoner_name => name})
+      
+        if existing_player
+          if existing_player['last_game_timestamp'].to_i <= player[:last_game_timestamp].to_i
+            existing_player.merge!(player)
+          end
+      
+          # Add matches to the Player
+          existing_player['matches'].merge!(player[:matches])
+        
+          @@players_collection.save(existing_player)
+        else
+          @@players_collection.insert(player)
+        end
+      end
       
       matches_found = result[:matches].keys
       players_found = result[:players].collect { |name, player| "#{player[:server]}-#{name}" }
@@ -111,12 +113,11 @@ class Loltistics < Sinatra::Base
   end
   
   get '/' do
-    flash[:notice] = "The uploader is down due to some changes to to the logfiles that came with the Galio patch."
     haml :index
   end
 
   get '/matches' do  
-    @matches = @@matches_collection.find().limit(25)
+    @matches = @@matches_collection.find()
   
     haml :matches
   end
@@ -125,46 +126,24 @@ class Loltistics < Sinatra::Base
     @match = @@matches_collection.find_one({'id' => id})
     raise MatchNotFound if @match.nil?
   
-    @winning_team = @match['players'].select { |p| p['elo_change'].to_i > 0 }
-    @losing_team = @match['players'].select { |p| p['elo_change'].to_i < 0 }
-  
+    @team_one = @match['players'].select { |p| p['team_id'] == '100' }
+    @team_two = @match['players'].select { |p| p['team_id'] == '200' }
+    
     haml :match
   end
 
   get '/players' do
-    #@players = @@players_collection.find().limit(50).sort([['summoner_name',1]])
-    @players = [
-      {
-        :server => 'US',
-        :summoner_name => 'Petridish'
-      },
-      {
-        :server => 'US',
-        :summoner_name => 'Fazers'
-      },
-      {
-        :server => 'US',
-        :summoner_name => 'Lante'
-      },
-      {
-        :server => 'US',
-        :summoner_name => 'Cyniae'
-      },
-      {
-        :server => 'US',
-        :summoner_name => 'Speed0'
-      },
-      ]
+    @players = @@players_collection.find()
       
     haml :players
   end
 
   get %r{/players/([EUS]{2})-(.+)} do |server, name|
     @player = @@players_collection.find_one({'server' => server, 'summoner_name' => name})
+    
     raise PlayerNotFound if @player.nil?
     
     if @player['matches']
-      
       @player['matches'] = @player['matches'].sort_by { |k, m| m['time_started'] }.reverse!
       
       @normal_matches = @player['matches'].select { |k, m| m['queue_type'] =~ /NORMAL/}
@@ -208,10 +187,6 @@ class Loltistics < Sinatra::Base
     })
   
     haml '%p Your message has been sent'
-  end
-
-  get '/upload' do
-    haml :upload
   end
 
   post '/upload' do

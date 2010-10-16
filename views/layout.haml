@@ -1,10 +1,13 @@
 !!!
 %html
   %head
-    %title LoLtistics
+    %title= @title.nil? ? "LoLtistics" : @title + " - LoLtistics"
     %link{:rel => 'stylesheet', :href => '/stylesheets/loltistics.css', :type => 'text/css'}
     %script{:type => 'text/javascript', :src => 'http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js'}
   %body
+    #upload
+      %a{:href => '/'} Upload
+      
     #header
     
       %h1 
@@ -17,12 +20,10 @@
             %a{:href => '/players'} Players
           %li
             %a.upload{:href => '/feedback'} Feedback
-      #upload
-        %a.button{:href => '/'} Upload
+        
     #content
       - if flash.has?(:notice)
         .notice= flash[:notice]
       = yield
     #footer
-    
-    
+      %span Summoner and Champion icons are property of <a href="http://riotgames.com">Riot Games</a>

@@ -1,12 +1,10 @@
-%h2 Matches
+%h2 Most Recent Matches
 
 - if @matches
-  #matches
-    .type
-      %h3 25 Most Recent
-      %ul
-        - @matches.each do |match|
-          %li
-            %a{:href => "/matches/#{match['id']}"}= match['id'] 
+  #matches    
+    %ul
+      - @matches.each do |match|
+        %li
+          %a{:href => "/matches/#{match['id']}"}= match['id'] 
 - else
   No matches to display

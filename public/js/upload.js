@@ -1,7 +1,7 @@
 $(document).ready(function() {
   var uploader = new qq.FileUploader({
     element: document.getElementById('file-uploader'),
-    template: '<div class="qq-uploader"><div class="qq-upload-drop-area"><span>Drop files here to upload</span></div><small>Logfiles are usually located in C:\\Riot Games\\League of Legends\\air\\logs</small><br /><div class="qq-upload-button">Click to select one or more files</div><ul class="qq-upload-list"></ul></div>',
+    template: '<div class="qq-uploader"><div class="qq-upload-drop-area"><span>Drop files here to upload</span></div><small>Logfiles are usually located in C:\\Riot Games\\League of Legends\\air\\logs</small><br /><div class="qq-upload-button">Click and select one or more files</div><ul class="qq-upload-list"></ul></div>',
     action: '/upload',
     allowedExtensions: ['log'],
     onComplete: function(id, fileName, responseJSON) {

@@ -1,5 +1,5 @@
 .uploader-box
-  %h2 Upload Log Files
+  %h2 Upload Your Log Files
 
   #file-uploader
     %noscript
@@ -11,5 +11,19 @@
 
   %ul#output
 
+.featured-players
+  %h2 Most Active Players
+  %ul
+    - @players.each do |player|
+      %li.summoner_name
+        %a{:href => "/players/#{player['server']}-#{player['summoner_name']}"}= "#{player['server']}-#{player['summoner_name']}"
+    
+.featured-matches
+  %h2 Latest Matches
+  %ul
+    - @matches.each do |match|
+      %li.match_key
+        %a{:href => "/matches/#{match['id']}"}= match['id']
+  
 %script{:type => 'text/javascript', :src => '/js/file-uploader.js'}
 %script{:type => 'text/javascript', :src => '/js/upload.js'}

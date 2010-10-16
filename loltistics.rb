@@ -31,7 +31,7 @@ class Loltistics < Sinatra::Base
     @@players_collection = db.collection('players')
     @@logs_collection = db.collection('logs')
     
-    #if ENV['MONGOHQ_URL']
+    #if !ENV['MONGOHQ_URL']
     #  # Remove all records
     #  @@matches_collection.remove
     #  @@players_collection.remove
@@ -72,11 +72,13 @@ class Loltistics < Sinatra::Base
             existing_player.merge!(player)
           end
       
-          # Add matches to the Player
+          # Add matches to the player
           existing_player['matches'].merge!(player[:matches])
-        
+          existing_player['num_matches'] = existing_player['matches'].length
+          
           @@players_collection.save(existing_player)
         else
+          player['num_matches'] = player[:matches].length
           @@players_collection.insert(player)
         end
       end
@@ -113,11 +115,14 @@ class Loltistics < Sinatra::Base
   end
   
   get '/' do
+    @players = @@players_collection.find().limit(10).sort([[:num_matches, :desc]])
+    @matches = @@matches_collection.find().limit(10).sort([[:id, :desc]])
+    
     haml :index
   end
 
   get '/matches' do  
-    @matches = @@matches_collection.find()
+    @matches = @@matches_collection.find().limit(25).sort([[:id, :desc]])
   
     haml :matches
   end
@@ -126,6 +131,8 @@ class Loltistics < Sinatra::Base
     @match = @@matches_collection.find_one({'id' => id})
     raise MatchNotFound if @match.nil?
   
+    @title = @match['id']
+    
     @team_one = @match['players'].select { |p| p['team_id'] == '100' }
     @team_two = @match['players'].select { |p| p['team_id'] == '200' }
     
@@ -133,7 +140,7 @@ class Loltistics < Sinatra::Base
   end
 
   get '/players' do
-    @players = @@players_collection.find()
+    @players = @@players_collection.find().limit(25).sort([[:last_game_timestamp, :desc]])
       
     haml :players
   end
@@ -142,6 +149,8 @@ class Loltistics < Sinatra::Base
     @player = @@players_collection.find_one({'server' => server, 'summoner_name' => name})
     
     raise PlayerNotFound if @player.nil?
+    
+    @title = @player['server'] + "-" + @player['summoner_name']
     
     if @player['matches']
       @player['matches'] = @player['matches'].sort_by { |k, m| m['time_started'] }.reverse!
@@ -162,6 +171,8 @@ class Loltistics < Sinatra::Base
   end
   
   get '/feedback' do
+    @title = "Feedback"
+    
     haml :feedback
   end
 

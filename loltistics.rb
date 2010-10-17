@@ -170,6 +170,10 @@ class Loltistics < Sinatra::Base
     haml :logs
   end
   
+  get '/about' do
+    haml :about
+  end
+  
   get '/feedback' do
     @title = "Feedback"
     

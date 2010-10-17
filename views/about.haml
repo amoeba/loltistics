@@ -1,0 +1,38 @@
+%h2 About LoLtistics
+
+%p
+  <a href="http://loltistics.heroku.com">LoLtistics</a> is a side project. It started as a way to learn <a href="http://nodejs.org">NodeJS</a> by writing a parser for <a href="http://leagueoflegends.com">League of Legends</a> logfiles. The parser and website were rewritten in <a href="http://ruby-lang.org">Ruby</a> so the site could be deployed to <a href="http://heroku.com">Heroku</a>
+
+%p
+  %h3 Basic Goals
+  %ul
+    %li Allow users to link their matches to friends
+    %li Help users to see simple statistics like average team level and spreads for Kills, Deaths, Assists, etc
+  
+  When Riot started including ELO in their logfiles I added that to the parser as well. ELO has since been removed from the logs so that featured is broken. Older logfiles that contain ELO can still be uploaded.
+
+%p
+  %h3 Future Goals
+  %ul
+    %li Pulling ELO from the official ladder to provide ELO tracking for players that don't upload logfiles
+    %li Pulling more information from the logfiles (match history, for example) to provide more complete data
+    %li
+      Running correlations between Win/Loss ratio and:
+      %ul
+        %li Time of day
+        %li Team composition (Do you have a tank on the team? How many carries?)
+        %li Your champion choice
+        %li etc.
+    %li
+      Other statistics:
+      %ul
+        %li Minion kills vs. W/L ratio
+
+%p
+  %h3 Known Bug List
+  %ul
+    %li Winning and Losing teams cannot be determined (if you know how, please <a href="/feedback">let me know</a>)
+    %li If ELO is absent from a logfile, an ELO of 0 is recorded
+    %li Spells aren't recorded
+    %li Newer champions don't have portrait thumbnails
+    %li Newer items don't show up correctly

@@ -4,7 +4,7 @@
   #file-uploader
     %noscript
       %p You are seeing this message because you have Javascript disabled.
-      %form#upload-form{:method => :post, :enctype => 'multipart/form-data'}
+      %form#upload-form{:action=> '/upload', :method => :post, :enctype => 'multipart/form-data'}
         %label{:for => 'file'} Select a logfile:
         %input{:type => 'file', :name => 'file'}
         %input{:type => 'submit', :value => 'Upload'}

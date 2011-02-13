@@ -9,6 +9,8 @@ files.each do |filename|
   File.open(filename) do |f| 
     contents = LOL::XinZhaoParser.parse_file(f.read())
   
-    pp contents[:ip]
+    contents[:matches].each do |k,match|
+      puts "#{k} => #{match[:ip]}"
+    end
   end
 end

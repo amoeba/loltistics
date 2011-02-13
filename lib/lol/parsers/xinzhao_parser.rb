@@ -115,15 +115,19 @@ module LOL
           #END Debugging IP
           
           match_key = @server + eog['body']['gameId']
-        
+          body = eog['body']
+          
           # Older matches don't have this. Default to NORMAL
-          queue_type = eog['body']['queueType'].nil? ? 'NORMAL' : eog['body']['queueType']
-
+          queue_type = body['queueType'].nil? ? 'NORMAL' : body['queueType']
+          
+          
+          adjusted_ip = body['ipEarned'].to_i - body['boostIpEarned'].to_i - body['finishStreakBonus'].to_i - body['firstWinBonus'].to_i
           match_data = {
             :queue_type => queue_type,
-            :game_length => eog['body']['gameLength'],
-            :game_type => eog['body']['gameType'],
-            :ranked => eog['body']['ranked'],
+            :game_length => body['gameLength'],
+            :game_type => body['gameType'],
+            :ranked => body['ranked'],
+            :ip => adjusted_ip,
             :players => []
           }
         
@@ -132,7 +136,7 @@ module LOL
           # team 100 is blue
           # team 200 is purple
           # teamPlayerParticipantStats always contains the uploader
-          all_players = eog['body']['teamPlayerParticipantStats']['list']['source'] + eog['body']['otherTeamPlayerParticipantStats']['list']['source']
+          all_players = body['teamPlayerParticipantStats']['list']['source'] + body['otherTeamPlayerParticipantStats']['list']['source']
         
           all_players.each do |player|
             new_player = {
@@ -151,13 +155,16 @@ module LOL
               :summoner_name => player['summonerName'],
               :team_id => player['teamId'],
               :level => player['level'],
-              :elo => player['elo'],
-              :elo_change => player['eloChange'],
               :skin_name => player['skinName'],
               :statistics => {},
               :items => []
             }
           
+            if player['elo'] != '0'
+              match_player[:elo] = player['elo']
+              match_player[:elo_change] = player['eloChange']
+            end
+            
             # Player Statistics
             player['statistics']['list']['source'].each do |s|
               match_player[:statistics][s['statTypeId']] = s['value']
@@ -178,7 +185,7 @@ module LOL
               # Add or update the record
             
               # Older log files don't have a queueType in their EOGStats so we must have a fallback
-              match_type = eog['body']['ranked'] =~ /true/ ? :ranked : :normal
+              match_type = body['ranked'] =~ /true/ ? :ranked : :normal
             
               @players[player['summonerName']][:record] = existing_record if existing_record
               @players[player['summonerName']][:record].merge!(
@@ -192,7 +199,8 @@ module LOL
               )
             
               @players[player['summonerName']][:elo] = existing_elo if existing_elo
-              if player['elo']
+              
+              if player['elo'] != '0'
                 @players[player['summonerName']][:elo].merge!(
                   {
                     queue_type => player['elo']
@@ -206,16 +214,16 @@ module LOL
             # Only add Record and Matches for non-PRACTICE_GAMES
             if match_data[:game_type] != "PRACTICE_GAME"
               is_winner = player['eloChange'].to_i > 0
-            
+              elo = (player['elo'] == '0') ? nil : player['elo']
               @players[player['summonerName']][:matches].merge!(
                 {
                   match_key => {
                     :winner => is_winner,
                     :skin_name => player['skinName'],
-                    :game_length => eog['body']['gameLength'],
+                    :game_length => body['gameLength'],
                     :time_started => eog['timestamp'],
-                    :ranked => eog['body']['ranked'],
-                    :elo => player['elo'],
+                    :ranked => body['ranked'],
+                    :elo => elo,
                     :queue_type => queue_type
                   }
                 }  
